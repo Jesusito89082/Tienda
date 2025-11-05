@@ -1,0 +1,37 @@
+﻿@model Tienda.Models.DetallesVentum
+
+@{
+    ViewData["Title"] = "Detalle de Compra";
+}
+
+<div class="container my-5">
+    <h2 class="text-aura fw-bold mb-4"><i class="bi bi-receipt"></i> Detalle de Compra</h2>
+
+    <!-- Cliente -->
+    <div class="aura-card mb-4">
+        <h5 class="text-aura mb-3"><i class="bi bi-person"></i> Cliente</h5>
+        <p><strong>Nombre:</strong> @Model.Venta.Cliente?.Nombre</p>
+        <p><strong>Email:</strong> @Model.Venta.Cliente?.Email</p>
+        <p><strong>Teléfono:</strong> @Model.Venta.Cliente?.Telefono</p>
+        <p><strong>Dirección:</strong> @Model.Venta.Cliente?.Direccion</p>
+    </div>
+
+    <!-- Producto comprado -->
+    <div class="aura-card mb-4">
+        <h5 class="text-aura mb-3"><i class="bi bi-box-seam"></i> Producto Comprado</h5>
+        <p><strong>Producto:</strong> @Model.Producto.Nombre</p>
+        <p><strong>Talla:</strong> @Model.Producto.Talla</p>
+        <p><strong>Color:</strong> @Model.Producto.Color</p>
+        <p><strong>Cantidad:</strong> @Model.Cantidad</p>
+        <p><strong>Precio Unitario:</strong> @Model.PrecioUnitario.ToString("C")</p>
+        <p><strong>Subtotal:</strong> @((Model.Cantidad * Model.PrecioUnitario).ToString("C"))</p>
+        <p><strong>Venta ID:</strong> @Model.VentaId</p>
+        <p><strong>Fecha de Venta:</strong> @(Model.Venta.Fecha?.ToString("dd/MM/yyyy HH:mm") ?? "Sin fecha")</p>
+    </div>
+
+    <div class="text-end">
+        <a asp-action="Index" class="btn btn-outline-aura">
+            <i class="bi bi-arrow-left"></i> Volver al listado
+        </a>
+    </div>
+</div>

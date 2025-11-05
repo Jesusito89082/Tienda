@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Tienda.Models.Venta>
+
+@{
+    ViewData["Title"] = "Ventas";
+}
+
+@section Styles {
+    <style>
+        .aura-card {
+            background-color: #1e1e2f;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .aura-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 0 12px rgba(0, 188, 212, 0.3);
+            }
+
+        .btn-aura {
+            background-color: #00bcd4;
+            color: #121212;
+            border: none;
+            font-weight: 600;
+        }
+
+            .btn-aura:hover {
+                background-color: #00acc1;
+                color: #fff;
+            }
+
+        .icon-link {
+            color: #00bcd4;
+            margin-left: 0.6rem;
+            transition: color 0.2s;
+        }
+
+            .icon-link:hover {
+                color: #fff;
+            }
+
+        .venta-info {
+            margin-bottom: 0.4rem;
+        }
+
+            .venta-info strong {
+                color: #00bcd4;
+            }
+    </style>
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light fw-bold">
+            <i class="bi bi-cart-check"></i> Ventas
+        </h2>
+        <a asp-action="Create" class="btn btn-aura">
+            <i class="bi bi-plus-circle"></i> Nueva Venta
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-dark text-center">
+            <i class="bi bi-inbox fs-3"></i>
+            <p class="mb-0 mt-2">No hay ventas registradas aún.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="aura-card text-light">
+                        <h5 class="mb-2">
+                            <i class="bi bi-receipt"></i> Venta #@item.VentaId
+                        </h5>
+                        <div class="venta-info">
+                            <strong><i class="bi bi-calendar"></i> Fecha:</strong> @(item.Fecha.HasValue ? item.Fecha.Value.ToString("dd/MM/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture) : "Sin fecha")
+                        </div>
+                        <div class="venta-info">
+                            <strong><i class="bi bi-currency-dollar"></i> Total:</strong> @(item.Total?.ToString("C") ?? "$0.00")
+                        </div>
+                        <div class="venta-info">
+                            <strong><i class="bi bi-person"></i> Cliente:</strong> @(item.Cliente?.Nombre ?? "Sin cliente")
+                        </div>
+
+                        <div class="text-end mt-3">
+                            <a asp-action="Details" asp-route-id="@item.VentaId" class="icon-link" title="Ver detalles">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@item.VentaId" class="icon-link" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.VentaId" class="icon-link text-danger" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                        <a asp-action="Index" asp-controller="DetallesVentums" asp-route-ventaId="@item.VentaId" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-list"></i> Ver Compras de esta Venta
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

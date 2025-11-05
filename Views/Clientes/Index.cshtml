@@ -1,0 +1,107 @@
+﻿@model IEnumerable<Tienda.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Clientes";
+}
+
+@section Styles {
+    <style>
+        .aura-card {
+            background-color: #1e1e2f;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .aura-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 0 12px rgba(0, 188, 212, 0.3);
+            }
+
+        .btn-aura {
+            background-color: #00bcd4;
+            color: #121212;
+            border: none;
+            font-weight: 600;
+        }
+
+            .btn-aura:hover {
+                background-color: #00acc1;
+                color: #fff;
+            }
+
+        .icon-link {
+            color: #00bcd4;
+            margin-left: 0.6rem;
+            transition: color 0.2s;
+        }
+
+            .icon-link:hover {
+                color: #fff;
+            }
+
+        .client-info {
+            margin-bottom: 0.5rem;
+        }
+
+            .client-info strong {
+                color: #00bcd4;
+            }
+    </style>
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light fw-bold">
+            <i class="bi bi-people"></i> Clientes
+        </h2>
+        <a asp-action="Create" class="btn btn-aura">
+            <i class="bi bi-person-plus"></i> Nuevo Cliente
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-dark text-center">
+            <i class="bi bi-inbox fs-3"></i>
+            <p class="mb-0 mt-2">No hay clientes registrados aún.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="aura-card text-light">
+                        <h5 class="mb-2">
+                            <i class="bi bi-person-circle"></i> @item.Nombre
+                        </h5>
+                        <div class="client-info">
+                            <strong><i class="bi bi-envelope"></i> Email:</strong> @item.Email
+                        </div>
+                        <div class="client-info">
+                            <strong><i class="bi bi-telephone"></i> Teléfono:</strong> @item.Telefono
+                        </div>
+                        <div class="client-info">
+                            <strong><i class="bi bi-geo-alt"></i> Dirección:</strong> @item.Direccion
+                        </div>
+                        <div class="text-end mt-3">
+                            <a asp-action="Edit" asp-route-id="@item.ClienteId" class="icon-link" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.ClienteId" class="icon-link" title="Ver detalles">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.ClienteId" class="icon-link text-danger" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,146 @@
+/* ---------- Aura Theme – Tienda con estilo y alma ---------- */
+
+/* ===== BASE ===== */
+body {
+    background-color: #121212;
+    color: #f1f1f1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== TARJETAS AURA ===== */
+.aura-card {
+    background-color: #1e1e2f;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.2rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .aura-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0 12px rgba(0, 188, 212, 0.3);
+    }
+
+/* ===== BOTONES AURA ===== */
+.btn-aura {
+    background-color: #00bcd4;
+    color: #121212;
+    border: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+    .btn-aura:hover {
+        background-color: #00acc1;
+        color: #fff;
+    }
+
+.btn-outline-aura {
+    border-color: #00bcd4;
+    color: #00bcd4;
+    transition: all 0.2s ease;
+}
+
+    .btn-outline-aura:hover {
+        background-color: #00bcd4;
+        color: #121212;
+    }
+
+/* ===== ENLACES / ICONOS ===== */
+.icon-link {
+    color: #00bcd4;
+    margin-left: 0.5rem;
+    transition: color 0.2s ease;
+}
+
+    .icon-link:hover {
+        color: #fff;
+    }
+
+/* ===== TEXTOS Y FONDOS AURA ===== */
+.text-aura {
+    color: #00bcd4 !important;
+}
+
+.bg-aura-dark {
+    background-color: #1e1e2f !important;
+}
+
+.border-aura {
+    border-color: #333 !important;
+}
+
+/* ===== NAVBAR AURA ===== */
+.navbar-dark.bg-aura-dark {
+    background-color: #1e1e2f !important;
+    border-bottom: 1px solid #333;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #f1f1f1;
+}
+
+    .navbar-dark .navbar-nav .nav-link:hover {
+        color: #00bcd4;
+    }
+
+/* ===== HERO SECTION ===== */
+.aura-hero {
+    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+}
+
+/* ===== MÓDULOS / CARDS ===== */
+.aura-mod-card {
+    background-color: #1e1e2f;
+    color: #f1f1f1;
+    border: 1px solid #333;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .aura-mod-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+    }
+
+/* ===== ALERTAS AURA ===== */
+.aura-alert-empty {
+    background-color: #1e1e2f;
+    border: 1px solid #333;
+    color: #aaa;
+}
+
+/* ===== BADGES / STOCK ===== */
+.stock-badge {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+}
+
+.stock-low {
+    background-color: #ff5252;
+    color: #fff;
+}
+
+.stock-ok {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+/* ===== FOOTER AURA ===== */
+footer.bg-aura-dark {
+    background-color: #1e1e2f !important;
+    border-top: 1px solid #333;
+}
+
+/* ===== ANIMACIONES SUAVES ===== */
+.alert-auto {
+    animation: fadeOut 4s forwards;
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}

@@ -1,0 +1,75 @@
+﻿@model Tienda.Models.Factura
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Detalles de Factura";
+    var cultura = new CultureInfo("es-CR");
+    var numero = Model?.NumeroConsecutivo?.ToString() ?? Model?.FacturaId.ToString() ?? "—";
+    var clave = !string.IsNullOrWhiteSpace(Model?.Clave) ? Model.Clave : "—";
+    var fecha = Model?.FechaEmision != default(DateTime) ? Model.FechaEmision.ToString("dd/MM/yyyy HH:mm") : "—";
+    var cliente = Model?.Venta?.Cliente?.Nombre ?? "—";
+    var total = string.Format(cultura, "{0:C}", Model?.Venta?.Total ?? 0m);
+    var estado = !string.IsNullOrWhiteSpace(Model?.Estado) ? Model.Estado : "—";
+}
+
+<div class="container my-5">
+    <h2 class="text-aura fw-bold mb-4">
+        <i class="bi bi-receipt"></i> Detalles de Factura
+    </h2>
+
+    <div class="aura-card">
+        <h4 class="mb-3">Factura #@numero</h4>
+
+        <p><strong><i class="bi bi-key"></i> Clave:</strong> @clave</p>
+        <p><strong><i class="bi bi-calendar"></i> Fecha de Emisión:</strong> @fecha</p>
+        <p><strong><i class="bi bi-person"></i> Cliente:</strong> @cliente</p>
+        <p><strong><i class="bi bi-currency-dollar"></i> Total:</strong> @total</p>
+        <p><strong><i class="bi bi-info-circle"></i> Estado:</strong> @estado</p>
+
+        <div class="text-end mt-4">
+            <a asp-action="Descargar"
+               asp-controller="Facturas"
+               asp-route-id="@Model.FacturaId"
+               class="btn btn-aura">
+                <i class="bi bi-download"></i> Descargar PDF
+            </a>
+
+            <!-- Enviar por Gmail -->
+            <form asp-action="EnviarPorEmail"
+                  asp-controller="Facturas"
+                  method="post"
+                  class="d-inline ms-2">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@Model.FacturaId" />
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-envelope"></i> Enviar por Gmail
+                </button>
+            </form>
+
+            @if (string.Equals(Model?.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase))
+            {
+                <span class="text-warning ms-3">Pendiente de envío a Hacienda</span>
+            }
+        </div>
+    </div>
+
+    <!-- Mensajes de resultado -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-auto mt-3">
+            <i class="bi bi-check-circle"></i> @TempData["Mensaje"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-auto mt-3">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        </div>
+    }
+
+    <div class="mt-3">
+        <a asp-action="Index" asp-controller="Facturas" class="icon-link">
+            <i class="bi bi-arrow-left"></i> Volver al listado
+        </a>
+    </div>
+</div>

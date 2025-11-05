@@ -1,0 +1,133 @@
+﻿@model IEnumerable<Tienda.Models.Producto>
+
+@{
+    ViewData["Title"] = "Productos";
+}
+
+@section Styles {
+    <style>
+        .aura-card {
+            background-color: #1e1e2f;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.2rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .aura-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 0 12px rgba(0, 188, 212, 0.3);
+            }
+
+        .btn-aura {
+            background-color: #00bcd4;
+            color: #121212;
+            border: none;
+            font-weight: 600;
+        }
+
+            .btn-aura:hover {
+                background-color: #00acc1;
+                color: #fff;
+            }
+
+        .icon-link {
+            color: #00bcd4;
+            margin-left: 0.6rem;
+            transition: color 0.2s;
+        }
+
+            .icon-link:hover {
+                color: #fff;
+            }
+
+        .product-info {
+            margin-bottom: 0.4rem;
+        }
+
+            .product-info strong {
+                color: #00bcd4;
+            }
+
+        .stock-badge {
+            font-size: 0.9rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+        }
+
+        .stock-low {
+            background-color: #ff5252;
+            color: #fff;
+        }
+
+        .stock-ok {
+            background-color: #4caf50;
+            color: #fff;
+        }
+    </style>
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light fw-bold">
+            <i class="bi bi-box-seam"></i> Productos
+        </h2>
+        <a asp-action="Create" class="btn btn-aura">
+            <i class="bi bi-plus-circle"></i> Nuevo Producto
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-dark text-center">
+            <i class="bi bi-inbox fs-3"></i>
+            <p class="mb-0 mt-2">No hay productos registrados aún.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="aura-card text-light">
+                        <h5 class="mb-2">
+                            <i class="bi bi-tag"></i> @item.Nombre
+                        </h5>
+                        <div class="product-info">
+                            <strong><i class="bi bi-palette"></i> Color:</strong> @item.Color
+                        </div>
+                        <div class="product-info">
+                            <strong><i class="bi bi-rulers"></i> Talla:</strong> @item.Talla
+                        </div>
+                        <div class="product-info">
+                            <strong><i class="bi bi-currency-dollar"></i> Precio:</strong> @item.Precio.ToString("C")
+                        </div>
+                        <div class="product-info">
+                            <strong><i class="bi bi-box"></i> Stock:</strong>
+                            <span class="stock-badge @(item.Stock > 5 ? "stock-ok" : "stock-low")">
+                                @item.Stock unidades
+                            </span>
+                        </div>
+                        <div class="product-info">
+                            <strong><i class="bi bi-folder"></i> Categoría:</strong> @item.Categoria?.Nombre
+                        </div>
+
+                        <div class="text-end mt-3">
+                            <a asp-action="Edit" asp-route-id="@item.ProductoId" class="icon-link" title="Editar">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.ProductoId" class="icon-link" title="Ver detalles">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.ProductoId" class="icon-link text-danger" title="Eliminar">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

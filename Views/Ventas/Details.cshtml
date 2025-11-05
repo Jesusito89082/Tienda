@@ -1,0 +1,79 @@
+﻿@model Tienda.Models.Venta
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Detalle de Venta";
+    var cultura = new CultureInfo("es-CR");
+    var fecha = Model?.Fecha != null ? Model.Fecha.Value.ToString("dd/MM/yyyy HH:mm") : "Sin fecha";
+    var totalCalc = Model?.DetallesVenta?.Sum(d => d.Cantidad * d.PrecioUnitario) ?? 0m;
+    var totalTxt = string.Format(cultura, "{0:C}", totalCalc);
+}
+
+<div class="container my-5">
+    <h2 class="text-aura fw-bold mb-4"><i class="bi bi-cart-check"></i> Detalle de Venta</h2>
+
+    <!-- Datos generales -->
+    <div class="aura-card mb-4">
+        <h5 class="text-aura mb-3"><i class="bi bi-person"></i> Cliente</h5>
+        <p><strong>Nombre:</strong> @(Model?.Cliente?.Nombre ?? "—")</p>
+        <p><strong>Fecha:</strong> @fecha</p>
+        <p><strong>Total:</strong> @totalTxt</p>
+    </div>
+
+    <!-- Productos comprados -->
+    <div class="aura-card mb-4">
+        <h5 class="text-aura mb-3"><i class="bi bi-receipt"></i> Productos comprados</h5>
+
+        @if (Model?.DetallesVenta != null && Model.DetallesVenta.Any())
+        {
+            <ul class="list-unstyled mb-0">
+                @foreach (var det in Model.DetallesVenta)
+                {
+                    var pu = string.Format(cultura, "{0:C}", det.PrecioUnitario);
+                    var sub = string.Format(cultura, "{0:C}", det.Cantidad * det.PrecioUnitario);
+                    <li class="mb-2">
+                        <strong>@(det.Producto?.Nombre ?? "Producto")</strong>
+                        (Talla: @(det.Producto?.Talla ?? "—"), Color: @(det.Producto?.Color ?? "—"))
+                        <br />
+                        <span>Cantidad: @det.Cantidad</span> |
+                        <span>Precio Unitario: @pu</span> |
+                        <span>Subtotal: @sub</span>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="text-muted">No hay detalles de producto para esta venta.</div>
+        }
+    </div>
+
+    <!-- Botón para generar factura -->
+    <form asp-action="Generar" asp-controller="Facturas" method="post" class="d-inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="ventaId" value="@(Model?.VentaId ?? 0)" />
+        <button type="submit" class="btn btn-aura">
+            <i class="bi bi-file-earmark-pdf"></i> Generar Factura
+        </button>
+    </form>
+
+    <!-- Mensajes -->
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-auto mt-3">
+            <i class="bi bi-check-circle"></i> @TempData["Mensaje"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-auto mt-3">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+        </div>
+    }
+
+    <div class="mt-3">
+        <a asp-action="Index" asp-controller="Ventas" class="icon-link">
+            <i class="bi bi-arrow-left"></i> Volver al listado
+        </a>
+    </div>
+</div>
