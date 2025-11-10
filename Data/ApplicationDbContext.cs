@@ -89,7 +89,7 @@ namespace Tienda.Data
                     .HasConstraintName("FK__Ventas__ClienteI__5629CD9C");
             });
 
-            // 👇 Configuración de Factura (excluida de migraciones)
+            // 👇 Configuración de Factura
             modelBuilder.Entity<Factura>(entity =>
             {
                 entity.ToTable("Facturas");
@@ -106,9 +106,6 @@ namespace Tienda.Data
                       .WithMany()
                       .HasForeignKey(f => f.VentaId)
                       .OnDelete(DeleteBehavior.Cascade);
-
-                // Excluir de migraciones
-                entity.Metadata.SetIsTableExcludedFromMigrations(true);
             });
         }
     }
