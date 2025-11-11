@@ -13,6 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<EmailService>();           // Servicio de correo
 builder.Services.AddScoped<FacturaService>();            // Servicio de factura
 
+// Session para el carrito de compras
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 // DbContext
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -32,6 +41,12 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 // MVC + Razor
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+// Configurar Anti-Forgery para aceptar token en headers
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
 
 // DinkToPdf (wkhtmltopdf)
 builder.Services.AddSingleton<IConverter>(new SynchronizedConverter(new PdfTools()));
@@ -69,6 +84,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession(); // Habilitar sesiones para el carrito
 
 app.UseAuthentication(); // primero autenticación
 app.UseAuthorization();  // luego autorización

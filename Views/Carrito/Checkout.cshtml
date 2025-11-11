@@ -1,0 +1,104 @@
+@model List<Tienda.Models.CarritoItem>
+
+@{
+    ViewData["Title"] = "Checkout";
+    var total = Model.Sum(i => i.Cantidad * i.PrecioUnitario);
+}
+
+<div class="container my-5">
+    <h2 class="text-light fw-bold mb-4">
+    <i class="bi bi-credit-card"></i> Finalizar Compra
+    </h2>
+
+    <div class="row">
+ <div class="col-lg-8">
+    <div class="aura-card mb-4">
+     <h5 class="text-aura mb-3">Selecciona el Cliente</h5>
+           
+        <form asp-controller="Ventas" asp-action="FinalizarVenta" method="post" id="checkoutForm">
+               @Html.AntiForgeryToken()
+       
+          <div class="mb-3">
+    <label for="clienteId" class="form-label text-light">
+        <i class="bi bi-person"></i> Cliente
+            </label>
+          <select id="clienteId" name="clienteId" class="form-control" required>
+       <option value="">-- Seleccione un cliente --</option>
+          @foreach (var cliente in ViewBag.Clientes as IEnumerable<dynamic>)
+       {
+          <option value="@cliente.ClienteId">@cliente.Nombre</option>
+       }
+            </select>
+            </div>
+
+@* Enviar items del carrito como campos hidden *@
+        @for (int i = 0; i < Model.Count; i++)
+        {
+          <input type="hidden" name="carrito[@i].ProductoId" value="@Model[i].ProductoId" />
+           <input type="hidden" name="carrito[@i].Nombre" value="@Model[i].Nombre" />
+ <input type="hidden" name="carrito[@i].Cantidad" value="@Model[i].Cantidad" />
+           <input type="hidden" name="carrito[@i].PrecioUnitario" value="@Model[i].PrecioUnitario" />
+  }
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-aura">
+             <i class="bi bi-check-circle"></i> Confirmar Compra
+     </button>
+         <a asp-controller="Carrito" asp-action="Index" class="btn btn-outline-secondary">
+         <i class="bi bi-arrow-left"></i> Volver al Carrito
+            </a>
+  </div>
+     </form>
+            </div>
+    </div>
+
+        <div class="col-lg-4">
+  <div class="carrito-resumen">
+                <h4 class="text-light mb-4">Resumen del Pedido</h4>
+    
+    <div class="mb-3">
+             <h6 class="text-aura">Productos:</h6>
+          @foreach (var item in Model)
+            {
+      <div class="d-flex justify-content-between text-light mb-2">
+       <span>@item.Nombre x@item.Cantidad</span>
+          <strong>@((item.Cantidad * item.PrecioUnitario).ToString("?#,##0.00"))</strong>
+   </div>
+      }
+                </div>
+
+         <div class="resumen-item resumen-total">
+            <span>Total:</span>
+       <strong>@total.ToString("?#,##0.00")</strong>
+        </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .carrito-resumen {
+     background-color: #1e1e2f;
+ border: 1px solid #333;
+        border-radius: 12px;
+        padding: 2rem;
+        position: sticky;
+   top: 20px;
+    }
+
+    .resumen-item {
+        display: flex;
+        justify-content: space-between;
+margin-bottom: 1rem;
+  color: #f1f1f1;
+    }
+
+    .resumen-total {
+        font-size: 1.5rem;
+      font-weight: 800;
+        color: #00bcd4;
+        border-top: 2px solid #333;
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+</style>

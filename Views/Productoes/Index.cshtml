@@ -177,6 +177,57 @@
         .action-btn.delete:hover {
             background-color: #ff5252;
         }
+
+.btn-add-to-cart {
+  background-color: #00bcd4;
+  color: #fff;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add-to-cart:hover {
+  background-color: #00acc1;
+  transform: scale(1.05);
+}
+
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 250px;
+  max-width: 300px;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in 3s forwards;
+}
+
+@@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
     </style>
 }
 
@@ -256,10 +307,118 @@
           <span>Agotado</span>
          }
      </div>
- </div>
+  
+         @* Botón Agregar al Carrito *@
+          <div class="mt-3">
+           @if (item.Stock > 0)
+            {
+  <button class="btn btn-add-to-cart w-100" 
+   onclick="agregarAlCarrito(@item.ProductoId, '@item.Nombre', @item.Precio)"
+        data-producto-id="@item.ProductoId">
+        <i class="bi bi-cart-plus"></i> Agregar al Carrito
+       </button>
+     }
+    else
+   {
+   <button class="btn btn-add-to-cart w-100" disabled>
+  <i class="bi bi-x-circle"></i> Agotado
+       </button>
+          }
+     </div>
               </div>
-   </div>
- }
+            </div>
         </div>
     }
+   </div>
+    }
 </div>
+
+@section Scripts {
+    @Html.AntiForgeryToken()
+    
+    <script>
+ function agregarAlCarrito(productoId, nombreProducto, precio) {
+   const button = event.target.closest('button');
+     const originalContent = button.innerHTML;
+
+            // Deshabilitar botón temporalmente
+    button.disabled = true;
+       button.innerHTML = '<i class="bi bi-hourglass-split"></i> Agregando...';
+
+        // Obtener el token anti-forgery
+      const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+   fetch('@Url.Action("AgregarProducto", "Carrito")', {
+  method: 'POST',
+      headers: {
+    'Content-Type': 'application/json',
+    'RequestVerificationToken': token
+     },
+   body: JSON.stringify({
+        productoId: productoId,
+   cantidad: 1
+       })
+          })
+             .then(response => response.json())
+  .then(data => {
+        if (data.success) {
+          // Cambiar botón temporalmente
+        button.innerHTML = '<i class="bi bi-check-circle"></i> ¡Agregado!';
+                button.classList.add('btn-success-temp');
+
+  // Mostrar notificación
+        mostrarNotificacion('success', `${nombreProducto} agregado al carrito`);
+
+           // Actualizar contador del carrito si existe
+   actualizarContadorCarrito(data.totalItems);
+
+         // Restaurar botón después de 2 segundos
+      setTimeout(() => {
+  button.innerHTML = originalContent;
+         button.classList.remove('btn-success-temp');
+      button.disabled = false;
+          }, 2000);
+  } else {
+            button.innerHTML = originalContent;
+   button.disabled = false;
+       mostrarNotificacion('error', data.message || 'Error al agregar al carrito');
+     }
+  })
+         .catch(error => {
+               console.error('Error:', error);
+     button.innerHTML = originalContent;
+    button.disabled = false;
+       mostrarNotificacion('error', 'Error al agregar al carrito');
+     });
+   }
+
+        function mostrarNotificacion(tipo, mensaje) {
+   // Crear notificación toast
+   const toast = document.createElement('div');
+   toast.className = `toast-notification toast-${tipo}`;
+   toast.innerHTML = `
+          <i class="bi bi-${tipo === 'success' ? 'check-circle-fill' : 'exclamation-circle-fill'}"></i>
+    <span>${mensaje}</span>
+       `;
+
+   document.body.appendChild(toast);
+
+     // Mostrar con animación
+     setTimeout(() => toast.classList.add('show'), 100);
+
+            // Ocultar y eliminar
+   setTimeout(() => {
+           toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+   }, 3000);
+        }
+
+   function actualizarContadorCarrito(totalItems) {
+          const contador = document.getElementById('cart-counter');
+  if (contador) {
+      contador.textContent = totalItems;
+    contador.style.display = totalItems > 0 ? 'inline-block' : 'none';
+            }
+        }
+    </script>
+}

@@ -227,6 +227,11 @@ namespace Tienda.Controllers
                 await _context.SaveChangesAsync();
 
                 await tx.CommitAsync();
+        
+                // Limpiar el carrito después de finalizar la venta
+                HttpContext.Session.Remove("Carrito");
+       
+                TempData["Mensaje"] = "Venta realizada exitosamente";
                 return RedirectToAction("Details", new { id = venta.VentaId });
             }
             catch (Exception ex)
