@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,6 +14,7 @@ using Tienda.Services;
 
 namespace Tienda.Controllers
 {
+    [Authorize(Roles = "ADMINISTRADOR")]
     public class FacturasController : Controller
     {
         private readonly ApplicationDbContext _context;

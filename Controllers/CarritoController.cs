@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tienda.Data;
@@ -6,6 +7,7 @@ using System.Text.Json;
 
 namespace Tienda.Controllers
 {
+    [AllowAnonymous]
     public class CarritoController : Controller
     {
         private readonly ApplicationDbContext _context;

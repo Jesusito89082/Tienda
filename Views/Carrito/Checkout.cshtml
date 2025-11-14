@@ -7,74 +7,164 @@
 
 <div class="container my-5">
     <h2 class="text-light fw-bold mb-4">
-    <i class="bi bi-credit-card"></i> Finalizar Compra
-    </h2>
+ <i class="bi bi-credit-card"></i> Finalizar Compra
+</h2>
 
-    <div class="row">
+  <div class="row">
  <div class="col-lg-8">
     <div class="aura-card mb-4">
-     <h5 class="text-aura mb-3">Selecciona el Cliente</h5>
-           
-        <form asp-controller="Ventas" asp-action="FinalizarVenta" method="post" id="checkoutForm">
-               @Html.AntiForgeryToken()
-       
-          <div class="mb-3">
+          <h5 class="text-aura mb-3">Información del Cliente</h5>
+   
+   <form asp-controller="Ventas" asp-action="FinalizarVenta" method="post" id="checkoutForm">
+     @Html.AntiForgeryToken()
+ 
+<div class="mb-3">
+      <label class="form-label text-light">
+ <i class="bi bi-person"></i> ¿Ya eres cliente?
+     </label>
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="clienteExistenteToggle" checked>
+        <label class="form-check-label text-light" for="clienteExistenteToggle">
+      Sí, seleccionar cliente existente
+  </label>
+   </div>
+   </div>
+
+        <div id="clienteExistenteDiv">
+       <div class="mb-3">
     <label for="clienteId" class="form-label text-light">
-        <i class="bi bi-person"></i> Cliente
+    <i class="bi bi-person-check"></i> Selecciona tu perfil
+          </label>
+   <select id="clienteId" name="clienteId" class="form-control">
+    <option value="">-- Seleccione un cliente --</option>
+    @foreach (var cliente in ViewBag.Clientes as IEnumerable<dynamic>)
+             {
+   <option value="@cliente.ClienteId">@cliente.Nombre</option>
+     }
+ </select>
+       </div>
+</div>
+
+         <div id="clienteNuevoDiv" style="display: none;">
+      <div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Completa tus datos para crear tu perfil de cliente
+        </div>
+          <div class="mb-3">
+ <label for="nuevoNombre" class="form-label text-light">
+     <i class="bi bi-person"></i> Nombre Completo *
+  </label>
+        <input type="text" id="nuevoNombre" name="nuevoNombre" class="form-control" placeholder="Ej: Juan Pérez" />
+   </div>
+     <div class="mb-3">
+      <label for="nuevoEmail" class="form-label text-light">
+    <i class="bi bi-envelope"></i> Email
             </label>
-          <select id="clienteId" name="clienteId" class="form-control" required>
-       <option value="">-- Seleccione un cliente --</option>
-          @foreach (var cliente in ViewBag.Clientes as IEnumerable<dynamic>)
-       {
-          <option value="@cliente.ClienteId">@cliente.Nombre</option>
-       }
-            </select>
-            </div>
+   <input type="email" id="nuevoEmail" name="nuevoEmail" class="form-control" placeholder="ejemplo@correo.com" />
+       </div>
+        <div class="mb-3">
+     <label for="nuevoTelefono" class="form-label text-light">
+       <i class="bi bi-phone"></i> Teléfono
+        </label>
+   <input type="tel" id="nuevoTelefono" name="nuevoTelefono" class="form-control" placeholder="8888-8888" />
+      </div>
+    <div class="mb-3">
+   <label for="nuevaDireccion" class="form-label text-light">
+      <i class="bi bi-geo-alt"></i> Dirección
+        </label>
+    <textarea id="nuevaDireccion" name="nuevaDireccion" class="form-control" rows="2" placeholder="Dirección de entrega"></textarea>
+         </div>
+ </div>
 
 @* Enviar items del carrito como campos hidden *@
-        @for (int i = 0; i < Model.Count; i++)
-        {
-          <input type="hidden" name="carrito[@i].ProductoId" value="@Model[i].ProductoId" />
+     @for (int i = 0; i < Model.Count; i++)
+ {
+  <input type="hidden" name="carrito[@i].ProductoId" value="@Model[i].ProductoId" />
            <input type="hidden" name="carrito[@i].Nombre" value="@Model[i].Nombre" />
  <input type="hidden" name="carrito[@i].Cantidad" value="@Model[i].Cantidad" />
-           <input type="hidden" name="carrito[@i].PrecioUnitario" value="@Model[i].PrecioUnitario" />
+  <input type="hidden" name="carrito[@i].PrecioUnitario" value="@Model[i].PrecioUnitario" />
   }
 
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2 mt-4">
             <button type="submit" class="btn btn-aura">
-             <i class="bi bi-check-circle"></i> Confirmar Compra
+    <i class="bi bi-check-circle"></i> Confirmar Compra
      </button>
          <a asp-controller="Carrito" asp-action="Index" class="btn btn-outline-secondary">
-         <i class="bi bi-arrow-left"></i> Volver al Carrito
+  <i class="bi bi-arrow-left"></i> Volver al Carrito
             </a>
   </div>
-     </form>
-            </div>
+   </form>
+ </div>
     </div>
 
         <div class="col-lg-4">
   <div class="carrito-resumen">
-                <h4 class="text-light mb-4">Resumen del Pedido</h4>
+       <h4 class="text-light mb-4">Resumen del Pedido</h4>
     
     <div class="mb-3">
-             <h6 class="text-aura">Productos:</h6>
+          <h6 class="text-aura">Productos:</h6>
           @foreach (var item in Model)
-            {
-      <div class="d-flex justify-content-between text-light mb-2">
-       <span>@item.Nombre x@item.Cantidad</span>
-          <strong>@((item.Cantidad * item.PrecioUnitario).ToString("?#,##0.00"))</strong>
-   </div>
+     {
+   <div class="d-flex justify-content-between text-light mb-2">
+<span>@item.Nombre x@item.Cantidad</span>
+    <strong>@((item.Cantidad * item.PrecioUnitario).ToString("?#,##0.00"))</strong>
+ </div>
       }
-                </div>
+         </div>
 
          <div class="resumen-item resumen-total">
             <span>Total:</span>
        <strong>@total.ToString("?#,##0.00")</strong>
         </div>
-          </div>
+   </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+<script>
+    document.getElementById('clienteExistenteToggle').addEventListener('change', function() {
+        const clienteExistenteDiv = document.getElementById('clienteExistenteDiv');
+      const clienteNuevoDiv = document.getElementById('clienteNuevoDiv');
+ const clienteIdSelect = document.getElementById('clienteId');
+        
+  if (this.checked) {
+            // Mostrar selector de cliente existente
+            clienteExistenteDiv.style.display = 'block';
+            clienteNuevoDiv.style.display = 'none';
+            clienteIdSelect.required = true;
+            document.getElementById('nuevoNombre').required = false;
+        } else {
+     // Mostrar formulario de nuevo cliente
+            clienteExistenteDiv.style.display = 'none';
+clienteNuevoDiv.style.display = 'block';
+            clienteIdSelect.required = false;
+      clienteIdSelect.value = '';
+            document.getElementById('nuevoNombre').required = true;
+     }
+    });
+
+    // Validación antes de enviar
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        const clienteExistente = document.getElementById('clienteExistenteToggle').checked;
+        
+        if (clienteExistente) {
+            const clienteId = document.getElementById('clienteId').value;
+         if (!clienteId) {
+      e.preventDefault();
+     alert('Por favor selecciona un cliente');
+                return false;
+      }
+   } else {
+            const nuevoNombre = document.getElementById('nuevoNombre').value.trim();
+  if (!nuevoNombre) {
+     e.preventDefault();
+                alert('Por favor ingresa tu nombre completo');
+ return false;
+ }
+        }
+    });
+</script>
+}
 
 <style>
     .carrito-resumen {
@@ -82,23 +172,47 @@
  border: 1px solid #333;
         border-radius: 12px;
         padding: 2rem;
-        position: sticky;
+   position: sticky;
    top: 20px;
     }
 
     .resumen-item {
         display: flex;
-        justify-content: space-between;
+  justify-content: space-between;
 margin-bottom: 1rem;
   color: #f1f1f1;
     }
 
     .resumen-total {
         font-size: 1.5rem;
-      font-weight: 800;
-        color: #00bcd4;
+    font-weight: 800;
+ color: #00bcd4;
         border-top: 2px solid #333;
-        padding-top: 1rem;
+ padding-top: 1rem;
         margin-top: 1rem;
+    }
+
+    .aura-card {
+        background-color: #1e1e2f;
+        border: 1px solid #333;
+   border-radius: 12px;
+  padding: 2rem;
+    }
+
+    .form-control {
+        background-color: #121212;
+    border: 1px solid #333;
+        color: #f1f1f1;
+    }
+
+    .form-control:focus {
+        background-color: #1e1e2f;
+  border-color: #00bcd4;
+  color: #f1f1f1;
+    }
+
+    .form-check-input:checked {
+        background-color: #00bcd4;
+        border-color: #00bcd4;
     }
 </style>

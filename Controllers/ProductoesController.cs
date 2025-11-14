@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,22 +17,24 @@ namespace Tienda.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public ProductoesController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
-        {
+ {
       _context = context;
-            _webHostEnvironment = webHostEnvironment;
-        }
+   _webHostEnvironment = webHostEnvironment;
+ }
 
-    // GET: Productoes
+    // GET: Productoes - PÚBLICO
+      [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Productos.Include(p => p.Categoria);
+    var applicationDbContext = _context.Productos.Include(p => p.Categoria);
           return View(await applicationDbContext.ToListAsync());
-        }
+    }
 
-   // GET: Productoes/Details/5
-        public async Task<IActionResult> Details(int? id)
+   // GET: Productoes/Details/5 - PÚBLICO
+        [AllowAnonymous]
+     public async Task<IActionResult> Details(int? id)
    {
-   if (id == null)
+ if (id == null)
    {
            return NotFound();
        }
@@ -41,22 +44,24 @@ namespace Tienda.Controllers
            .FirstOrDefaultAsync(m => m.ProductoId == id);
       if (producto == null)
             {
-        return NotFound();
+    return NotFound();
  }
 
      return View(producto);
         }
 
-        // GET: Productoes/Create
+        // GET: Productoes/Create - SOLO ADMIN
+        [Authorize(Roles = "ADMINISTRADOR")]
  public IActionResult Create()
-        {
+  {
             ViewData["CategoriaId"] = new SelectList(_context.Categorias, "CategoriaId", "Nombre");
     return View();
-        }
+     }
 
-      // POST: Productoes/Create
-     [HttpPost]
+    // POST: Productoes/Create - SOLO ADMIN
+  [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMINISTRADOR")]
     public async Task<IActionResult> Create([Bind("ProductoId,Nombre,Talla,Color,Precio,Stock,CategoriaId,ImagenArchivo")] Producto producto)
         {
 if (ModelState.IsValid)
@@ -75,8 +80,9 @@ if (ModelState.IsValid)
             return View(producto);
         }
 
-        // GET: Productoes/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        // GET: Productoes/Edit/5 - SOLO ADMIN
+        [Authorize(Roles = "ADMINISTRADOR")]
+public async Task<IActionResult> Edit(int? id)
   {
   if (id == null)
             {
@@ -92,9 +98,10 @@ if (ModelState.IsValid)
   return View(producto);
         }
 
- // POST: Productoes/Edit/5
+ // POST: Productoes/Edit/5 - SOLO ADMIN
         [HttpPost]
  [ValidateAntiForgeryToken]
+    [Authorize(Roles = "ADMINISTRADOR")]
         public async Task<IActionResult> Edit(int id, [Bind("ProductoId,Nombre,Talla,Color,Precio,Stock,CategoriaId,ImagenArchivo,ImagenUrl")] Producto producto)
     {
   if (id != producto.ProductoId)
@@ -137,8 +144,9 @@ if (ModelState.IsValid)
             return View(producto);
         }
 
-   // GET: Productoes/Delete/5
-      public async Task<IActionResult> Delete(int? id)
+   // GET: Productoes/Delete/5 - SOLO ADMIN
+        [Authorize(Roles = "ADMINISTRADOR")]
+    public async Task<IActionResult> Delete(int? id)
         {
           if (id == null)
    {
@@ -156,9 +164,10 @@ if (ModelState.IsValid)
          return View(producto);
  }
 
-        // POST: Productoes/Delete/5
+        // POST: Productoes/Delete/5 - SOLO ADMIN
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMINISTRADOR")]
  public async Task<IActionResult> DeleteConfirmed(int id)
      {
             var producto = await _context.Productos.FindAsync(id);
@@ -177,7 +186,7 @@ if (ModelState.IsValid)
 return RedirectToAction(nameof(Index));
    }
 
-        private bool ProductoExists(int id)
+    private bool ProductoExists(int id)
       {
  return _context.Productos.Any(e => e.ProductoId == id);
   }

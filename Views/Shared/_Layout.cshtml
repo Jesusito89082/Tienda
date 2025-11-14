@@ -34,31 +34,52 @@
                                 <i class="bi bi-house-door"></i> Inicio
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Categorias" asp-action="Index">
-                                <i class="bi bi-tags"></i> Categorías
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Clientes" asp-action="Index">
-                                <i class="bi bi-people"></i> Clientes
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Productoes" asp-action="Index">
-                                <i class="bi bi-box-seam"></i> Productos
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Ventas" asp-action="Index">
-                                <i class="bi bi-cart-check"></i> Ventas
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="DetallesVentums" asp-action="Index">
-                                <i class="bi bi-receipt"></i> Detalles
-                            </a>
-                        </li>
+
+                        @if (User.Identity?.IsAuthenticated == true && User.IsInRole("ADMINISTRADOR"))
+                        {
+                            <!-- Menú completo para ADMINISTRADOR -->
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Categorias" asp-action="Index">
+                                    <i class="bi bi-tags"></i> Categorías
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Clientes" asp-action="Index">
+                                    <i class="bi bi-people"></i> Clientes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Productoes" asp-action="Index">
+                                    <i class="bi bi-box-seam"></i> Productos
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Ventas" asp-action="Index">
+                                    <i class="bi bi-cart-check"></i> Ventas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="DetallesVentums" asp-action="Index">
+                                    <i class="bi bi-receipt"></i> Detalles
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Facturas" asp-action="Index">
+                                    <i class="bi bi-file-earmark-text"></i> Facturas
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <!-- Menú público (sin login o usuarios sin rol) -->
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Productoes" asp-action="Index">
+                                    <i class="bi bi-box-seam"></i> Productos
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Carrito visible para todos -->
                         <li class="nav-item">
                             <a class="nav-link text-light position-relative" asp-controller="Carrito" asp-action="Index">
                                 <i class="bi bi-cart3"></i> Carrito
