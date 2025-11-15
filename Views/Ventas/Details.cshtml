@@ -5,143 +5,182 @@
     ViewData["Title"] = "Detalle de Venta";
     var cultura = new CultureInfo("es-CR");
     var fecha = Model?.Fecha != null ? Model.Fecha.Value.ToString("dd/MM/yyyy HH:mm") : "Sin fecha";
-    var totalCalc = Model?.DetallesVenta?.Sum(d => d.Cantidad * d.PrecioUnitario) ?? 0m;
-    var totalTxt = string.Format(cultura, "{0:C}", totalCalc);
+
+    // Tomamos los campos de la venta; si no existen usamos los detalles como respaldo
+    var subtotal = Model?.Subtotal ?? 0m;
+    if (subtotal == 0m && Model?.DetallesVenta != null && Model.DetallesVenta.Any())
+    {
+        subtotal = Model.DetallesVenta.Sum(d => d.Cantidad * d.PrecioUnitario);
+    }
+
+    var descuento = Model?.Descuento ?? 0m;
+    var impuesto = Model?.Impuesto ?? 0m;
+
+    var total = Model?.Total ?? (subtotal - descuento + impuesto);
+
+    var subtotalTxt = string.Format(cultura, "{0:C}", subtotal);
+    var descuentoTxt = string.Format(cultura, "{0:C}", descuento);
+    var impuestoTxt = string.Format(cultura, "{0:C}", impuesto);
+    var totalTxt = string.Format(cultura, "{0:C}", total);
 }
 
 <div class="container my-5">
     <div class="text-center mb-4">
-      <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-     <h2 class="text-light fw-bold mt-3">¡Compra Exitosa!</h2>
-   <p class="text-light">Gracias por tu compra. Aquí están los detalles de tu pedido.</p>
+        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+        <h2 class="text-light fw-bold mt-3">¡Compra Exitosa!</h2>
+        <p class="text-light">Gracias por tu compra. Aquí están los detalles de tu pedido.</p>
     </div>
 
-  @* Mensajes de éxito/error *@
+    @* Mensajes de éxito/error *@
     @if (TempData["Mensaje"] != null)
     {
-      <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-  <i class="bi bi-check-circle"></i> @TempData["Mensaje"]
-       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  </div>
- }
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle"></i> @TempData["Mensaje"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
     @if (TempData["Info"] != null)
     {
- <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
-     <i class="bi bi-info-circle"></i> @TempData["Info"]
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  </div>
- }
+        <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-info-circle"></i> @TempData["Info"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
     @if (TempData["Error"] != null)
- {
-     <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-     <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  </div>
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
 
     <!-- Datos generales -->
     <div class="aura-card mb-4">
-        <h5 class="text-aura mb-3"><i class="bi bi-receipt-cutoff"></i> Información del Pedido</h5>
+        <h5 class="text-aura mb-3">
+            <i class="bi bi-receipt-cutoff"></i> Información del Pedido
+        </h5>
         <div class="row">
-   <div class="col-md-6">
-  <p class="text-light"><strong>Cliente:</strong> @(Model?.Cliente?.Nombre ?? "—")</p>
-         @if (!string.IsNullOrEmpty(Model?.Cliente?.Email))
-         {
-   <p class="text-light"><strong>Email:</strong> @Model.Cliente.Email</p>
-  }
-       @if (!string.IsNullOrEmpty(Model?.Cliente?.Telefono))
-   {
-              <p class="text-light"><strong>Teléfono:</strong> @Model.Cliente.Telefono</p>
-       }
-  </div>
-      <div class="col-md-6">
-     <p class="text-light"><strong>Nº Pedido:</strong> #@(Model?.VentaId ?? 0)</p>
-        <p class="text-light"><strong>Fecha:</strong> @fecha</p>
-       <p class="text-light"><strong class="text-aura fs-4">Total: @totalTxt</strong></p>
-     </div>
+            <div class="col-md-6">
+                <p class="text-light"><strong>Cliente:</strong> @(Model?.Cliente?.Nombre ?? "—")</p>
+                @if (!string.IsNullOrEmpty(Model?.Cliente?.Email))
+                {
+                    <p class="text-light"><strong>Email:</strong> @Model.Cliente.Email</p>
+                }
+                @if (!string.IsNullOrEmpty(Model?.Cliente?.Telefono))
+                {
+                    <p class="text-light"><strong>Teléfono:</strong> @Model.Cliente.Telefono</p>
+                }
+            </div>
+            <div class="col-md-6">
+                <p class="text-light"><strong>Nº Pedido:</strong> #@(Model?.VentaId ?? 0)</p>
+                <p class="text-light"><strong>Fecha:</strong> @fecha</p>
+                <p class="text-light">
+                    <strong class="text-aura fs-4">Total: @totalTxt</strong>
+                </p>
+            </div>
         </div>
     </div>
 
     <!-- Productos comprados -->
     <div class="aura-card mb-4">
-        <h5 class="text-aura mb-3"><i class="bi bi-bag-check"></i> Productos comprados</h5>
+        <h5 class="text-aura mb-3">
+            <i class="bi bi-bag-check"></i> Productos comprados
+        </h5>
 
         @if (Model?.DetallesVenta != null && Model.DetallesVenta.Any())
-{
-            <div class="table-responsive">
-     <table class="table table-dark table-hover">
-       <thead>
-       <tr>
-     <th>Producto</th>
-      <th>Detalles</th>
-         <th class="text-center">Cantidad</th>
-      <th class="text-end">P. Unitario</th>
-         <th class="text-end">Subtotal</th>
-    </tr>
-     </thead>
-   <tbody>
-     @foreach (var det in Model.DetallesVenta)
-     {
-   var pu = string.Format(cultura, "{0:C}", det.PrecioUnitario);
-     var sub = string.Format(cultura, "{0:C}", det.Cantidad * det.PrecioUnitario);
-   <tr>
-      <td><strong>@(det.Producto?.Nombre ?? "Producto")</strong></td>
-    <td>
-       @if (!string.IsNullOrEmpty(det.Producto?.Talla) || !string.IsNullOrEmpty(det.Producto?.Color))
- {
-       <span class="badge bg-secondary">
-      @if (!string.IsNullOrEmpty(det.Producto?.Talla))
-  {
-      <text>Talla: @det.Producto.Talla</text>
-      }
-           @if (!string.IsNullOrEmpty(det.Producto?.Color))
-     {
-     <text> | Color: @det.Producto.Color</text>
-       }
-  </span>
-        }
-    else
         {
-   <span class="text-muted">—</span>
-     }
-</td>
-  <td class="text-center">@det.Cantidad</td>
-   <td class="text-end">@pu</td>
-       <td class="text-end"><strong>@sub</strong></td>
-   </tr>
-       }
-        </tbody>
-     </table>
-    </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Detalles</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-end">P. Unitario</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var det in Model.DetallesVenta)
+                        {
+                            var pu = string.Format(cultura, "{0:C}", det.PrecioUnitario);
+                            var sub = string.Format(cultura, "{0:C}", det.Cantidad * det.PrecioUnitario);
+                            <tr>
+                                <td><strong>@(det.Producto?.Nombre ?? "Producto")</strong></td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(det.Producto?.Talla) || !string.IsNullOrEmpty(det.Producto?.Color))
+                                    {
+                                        <span class="badge bg-secondary">
+                                            @if (!string.IsNullOrEmpty(det.Producto?.Talla))
+                                            {
+                                                <text>Talla: @det.Producto.Talla</text>
+                                            }
+                                            @if (!string.IsNullOrEmpty(det.Producto?.Color))
+                                            {
+                                                <text> | Color: @det.Producto.Color</text>
+                                            }
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </td>
+                                <td class="text-center">@det.Cantidad</td>
+                                <td class="text-end">@pu</td>
+                                <td class="text-end"><strong>@sub</strong></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
         else
         {
- <div class="text-muted">No hay detalles de producto para esta venta.</div>
+            <div class="text-muted">No hay detalles de producto para esta venta.</div>
         }
+    </div>
+
+    <!-- Resumen de totales (usa Subtotal/Descuento/Impuesto/Total de la venta) -->
+    <div class="aura-card mb-4 text-end">
+        <p class="text-light mb-1">
+            <strong>Subtotal:</strong> @subtotalTxt
+        </p>
+        <p class="text-light mb-1">
+            <strong>Descuento:</strong> -@descuentoTxt
+        </p>
+        <p class="text-light mb-1">
+            <strong>Impuesto (13%):</strong> @impuestoTxt
+        </p>
+        <hr />
+        <p class="text-light fs-4 mb-0">
+            <strong>Total:</strong>
+            <span class="text-aura">@totalTxt</span>
+        </p>
     </div>
 
     <!-- Acciones -->
     <div class="d-flex gap-2 flex-wrap">
-      @if (User.Identity?.IsAuthenticated == true && User.IsInRole("ADMINISTRADOR"))
+        @if (User.Identity?.IsAuthenticated == true && User.IsInRole("ADMINISTRADOR"))
         {
-   <!-- Botón para generar factura (solo admin) -->
+            <!-- Botón para generar factura (solo admin) -->
             <form asp-action="Generar" asp-controller="Facturas" method="post" class="d-inline">
-     @Html.AntiForgeryToken()
- <input type="hidden" name="ventaId" value="@(Model?.VentaId ?? 0)" />
-            <button type="submit" class="btn btn-aura">
-     <i class="bi bi-file-earmark-pdf"></i> Generar Factura
-              </button>
-         </form>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="ventaId" value="@(Model?.VentaId ?? 0)" />
+                <button type="submit" class="btn btn-aura">
+                    <i class="bi bi-file-earmark-pdf"></i> Generar Factura
+                </button>
+            </form>
         }
 
         <a asp-controller="Productoes" asp-action="Index" class="btn btn-outline-light">
-      <i class="bi bi-arrow-left"></i> Seguir Comprando
+            <i class="bi bi-arrow-left"></i> Seguir Comprando
         </a>
 
         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("ADMINISTRADOR"))
         {
-    <a asp-action="Index" asp-controller="Ventas" class="btn btn-outline-secondary">
-   <i class="bi bi-list"></i> Ver Todas las Ventas
+            <a asp-action="Index" asp-controller="Ventas" class="btn btn-outline-secondary">
+                <i class="bi bi-list"></i> Ver Todas las Ventas
             </a>
         }
     </div>
@@ -149,9 +188,9 @@
 
 <style>
     .aura-card {
- background-color: #1e1e2f;
- border: 1px solid #333;
+        background-color: #1e1e2f;
+        border: 1px solid #333;
         border-radius: 12px;
-     padding: 2rem;
-  }
+        padding: 2rem;
+    }
 </style>

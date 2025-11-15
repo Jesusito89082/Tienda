@@ -32,13 +32,25 @@ namespace Tienda.Services
                 .Include(v => v.DetallesVenta).ThenInclude(d => d.Producto)
                 .FirstOrDefaultAsync(v => v.VentaId == ventaId);
 
-            if (venta == null) throw new Exception("Venta no encontrada.");
+            if (venta == null)
+                throw new Exception("Venta no encontrada.");
 
-            // Total consistente
-            var total = TotalesService.CalcularTotalVenta(venta);
+            // 👇 Tomamos el total que ya tiene la venta.
+            // Si viene nulo o 0, hacemos un cálculo de respaldo desde los detalles.
+            decimal total;
 
-            if (venta.Total != total)
+            if (venta.Total.HasValue && venta.Total.Value > 0)
             {
+                total = venta.Total.Value;
+            }
+            else
+            {
+                total = 0m;
+                if (venta.DetallesVenta != null)
+                {
+                    total = venta.DetallesVenta.Sum(d => d.Cantidad * d.PrecioUnitario);
+                }
+
                 venta.Total = total;
                 _context.Update(venta);
                 await _context.SaveChangesAsync();

@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Reportes";
+}
+
+<div class="container my-5">
+
+    <h1 class="mb-4 text-light fw-bold">
+        <i class="bi bi-bar-chart-line-fill text-aura"></i> Reportes del sistema
+    </h1>
+
+    <div class="row g-4">
+
+        <!-- REPORTE DE VENTAS -->
+        <div class="col-md-4">
+            <div class="card aura-dark-card border-aura shadow-lg h-100">
+                <div class="card-body text-light">
+                    <h5 class="card-title fw-bold text-aura">
+                        <i class="bi bi-receipt-cutoff"></i> Ventas
+                    </h5>
+                    <p class="card-text">Consulta las ventas diarias, semanales o mensuales.</p>
+
+                    <a href="@Url.Action("Ventas", "Reportes", new { periodo = "diario" })"
+                       class="btn btn-aura w-100 mb-2">Diario</a>
+
+                    <a href="@Url.Action("Ventas", "Reportes", new { periodo = "semanal" })"
+                       class="btn btn-outline-aura w-100 mb-2">Semanal</a>
+
+                    <a href="@Url.Action("Ventas", "Reportes", new { periodo = "mensual" })"
+                       class="btn btn-outline-aura w-100">Mensual</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- REPORTE DE INVENTARIO -->
+        <div class="col-md-4">
+            <div class="card aura-dark-card border-aura shadow-lg h-100">
+                <div class="card-body text-light">
+                    <h5 class="card-title fw-bold text-aura">
+                        <i class="bi bi-box-seam"></i> Inventario
+                    </h5>
+                    <p class="card-text">Revisa el stock actual de los productos.</p>
+
+                    <a href="@Url.Action("Inventario", "Reportes")"
+                       class="btn btn-aura w-100">Ver inventario</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTOS MÁS VENDIDOS -->
+        <div class="col-md-4">
+            <div class="card aura-dark-card border-aura shadow-lg h-100">
+                <div class="card-body text-light">
+                    <h5 class="card-title fw-bold text-aura">
+                        <i class="bi bi-graph-up-arrow"></i> Productos más vendidos
+                    </h5>
+                    <p class="card-text">Identifica los productos con mayor rotación.</p>
+
+                    <a href="@Url.Action("ProductosMasVendidos", "Reportes")"
+                       class="btn btn-aura w-100">Ver ranking</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

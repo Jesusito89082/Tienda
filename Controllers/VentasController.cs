@@ -47,13 +47,11 @@ namespace Tienda.Controllers
 
             if (venta == null) return NotFound();
 
-            // 🔢 Fuente de verdad: suma de detalles
-            var totalReal = TotalesService.CalcularTotalVenta(venta);
-            if (venta.Total != totalReal)
+            // Ya NO usamos TotalesService.CalcularTotalVenta(venta) porque no existe.
+            // Si quisieras, aquí podrías recalcular un subtotal de respaldo:
+            if ((venta.Subtotal == 0 || venta.Subtotal == default) && venta.DetallesVenta != null && venta.DetallesVenta.Any())
             {
-                venta.Total = totalReal;
-                _context.Update(venta);
-                await _context.SaveChangesAsync();
+                venta.Subtotal = venta.DetallesVenta.Sum(d => d.Cantidad * d.PrecioUnitario);
             }
 
             return View(venta);
@@ -62,7 +60,8 @@ namespace Tienda.Controllers
         // GET: Ventas/Create
         public IActionResult Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Clientes.AsNoTracking(), "ClienteId", "Nombre");
+            ViewData["ClienteId"] =
+                new SelectList(_context.Clientes.AsNoTracking(), "ClienteId", "Nombre");
             return View();
         }
 
@@ -73,7 +72,8 @@ namespace Tienda.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["ClienteId"] = new SelectList(_context.Clientes.AsNoTracking(), "ClienteId", "Nombre", venta.ClienteId);
+                ViewData["ClienteId"] =
+                    new SelectList(_context.Clientes.AsNoTracking(), "ClienteId", "Nombre", venta.ClienteId);
                 return View(venta);
             }
 
@@ -90,7 +90,8 @@ namespace Tienda.Controllers
             var venta = await _context.Ventas.FindAsync(id);
             if (venta == null) return NotFound();
 
-            ViewData["ClienteId"] = new SelectList(_context.Clientes.AsNoTracking(), "ClienteId", "Nombre", venta.ClienteId);
+            ViewData["ClienteId"] =
+                new SelectList(_context.Clientes.AsNoTracking(), "ClienteId", "Nombre", venta.ClienteId);
             return View(venta);
         }
 
@@ -103,7 +104,8 @@ namespace Tienda.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewData["ClienteId"] = new SelectList(_context.Clientes.AsNoTracking(), "ClienteId", "Nombre", venta.ClienteId);
+                ViewData["ClienteId"] =
+                    new SelectList(_context.Clientes.AsNoTracking(), "ClienteId", "Nombre", venta.ClienteId);
                 return View(venta);
             }
 
@@ -232,40 +234,44 @@ namespace Tienda.Controllers
                 }
             }
 
-            // Total desde carrito (fuente de verdad)
-            var total = carrito.Sum(c => c.Cantidad * c.PrecioUnitario);
-
             using var tx = await _context.Database.BeginTransactionAsync();
             try
             {
+                // Crear la venta (sin total aún)
                 var venta = new Venta
                 {
                     ClienteId = ventaClienteId,
-                    Fecha = DateTime.Now,
-                    Total = total
+                    Fecha = DateTime.Now
                 };
 
                 _context.Ventas.Add(venta);
-                await _context.SaveChangesAsync(); // genera VentaId
+
+                var detalles = new List<DetallesVentum>();
 
                 // Detalles + descuento de stock
                 foreach (var item in carrito)
                 {
-                    _context.DetallesVenta.Add(new DetallesVentum
+                    var detalle = new DetallesVentum
                     {
-                        VentaId = venta.VentaId,
+                        Venta = venta,                // relacionar por navegación
                         ProductoId = item.ProductoId,
                         Cantidad = item.Cantidad,
                         PrecioUnitario = item.PrecioUnitario
-                    });
+                    };
+
+                    detalles.Add(detalle);
+                    _context.DetallesVenta.Add(detalle);
 
                     var prod = productos.First(p => p.ProductoId == item.ProductoId);
                     prod.Stock -= item.Cantidad;
                     _context.Productos.Update(prod);
                 }
 
-                await _context.SaveChangesAsync();
+                // Calcular totales con IVA usando el servicio
+                // Aquí dejamos descuentoPorcentaje en 0 (este flujo no lo recibe)
+                TotalesService.CalcularTotalesVenta(venta, detalles, 0m);
 
+                await _context.SaveChangesAsync();
                 await tx.CommitAsync();
 
                 // Limpiar el carrito después de finalizar la venta

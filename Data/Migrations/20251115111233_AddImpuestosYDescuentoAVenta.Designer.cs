@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tienda.Data;
 
@@ -11,9 +12,11 @@ using Tienda.Data;
 namespace Tienda.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251115111233_AddImpuestosYDescuentoAVenta")]
+    partial class AddImpuestosYDescuentoAVenta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -540,7 +543,7 @@ namespace Tienda.Data.Migrations
             modelBuilder.Entity("Tienda.Models.Factura", b =>
                 {
                     b.HasOne("Tienda.Models.Venta", "Venta")
-                        .WithMany("Facturas")
+                        .WithMany()
                         .HasForeignKey("VentaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -588,8 +591,6 @@ namespace Tienda.Data.Migrations
             modelBuilder.Entity("Tienda.Models.Venta", b =>
                 {
                     b.Navigation("DetallesVenta");
-
-                    b.Navigation("Facturas");
                 });
 #pragma warning restore 612, 618
         }
