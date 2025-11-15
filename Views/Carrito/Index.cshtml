@@ -146,50 +146,50 @@ transform: scale(1.1);
     {
       <div class="carrito-item">
             <div class="carrito-item-info">
-             <h5 class="carrito-item-title">@item.Nombre</h5>
-    <p class="carrito-item-precio">@item.PrecioUnitario.ToString("?#,##0.00")</p>
+     <h5 class="carrito-item-title">@item.Nombre</h5>
+  <p class="carrito-item-precio">$@item.PrecioUnitario.ToString("N2")</p>
   </div>
 
              <div class="cantidad-control">
           <button class="cantidad-btn" onclick="actualizarCantidad(@item.ProductoId, @(item.Cantidad - 1))">
   <i class="bi bi-dash"></i>
-           </button>
-                 <input type="number" class="cantidad-input" value="@item.Cantidad" 
-              onchange="actualizarCantidad(@item.ProductoId, this.value)" min="1" />
-                 <button class="cantidad-btn" onclick="actualizarCantidad(@item.ProductoId, @(item.Cantidad + 1))">
+  </button>
+        <input type="number" class="cantidad-input" value="@item.Cantidad" 
+        onchange="actualizarCantidad(@item.ProductoId, this.value)" min="1" />
+      <button class="cantidad-btn" onclick="actualizarCantidad(@item.ProductoId, @(item.Cantidad + 1))">
           <i class="bi bi-plus"></i>
            </button>
     </div>
 
-       <div>
-        <strong class="text-aura">@((item.Cantidad * item.PrecioUnitario).ToString("?#,##0.00"))</strong>
+     <div>
+ <strong class="text-aura">$@((item.Cantidad * item.PrecioUnitario).ToString("N2"))</strong>
       </div>
 
           <button class="btn btn-sm btn-danger" onclick="eliminarProducto(@item.ProductoId, '@item.Nombre')">
  <i class="bi bi-trash"></i>
   </button>
-      </div>
+    </div>
     }
       </div>
 
    <div class="col-lg-4">
         <div class="carrito-resumen">
-     <h4 class="text-light mb-4">Resumen del Pedido</h4>
+  <h4 class="text-light mb-4">Resumen del Pedido</h4>
       
-             <div class="resumen-item">
-               <span>Subtotal:</span>
-     <strong>@total.ToString("?#,##0.00")</strong>
+          <div class="resumen-item">
+       <span>Subtotal:</span>
+     <strong>$@total.ToString("N2")</strong>
            </div>
       
-    <div class="resumen-item">
+ <div class="resumen-item">
   <span>Productos:</span>
-             <strong>@Model.Sum(i => i.Cantidad) items</strong>
-      </div>
+          <strong>@Model.Sum(i => i.Cantidad) items</strong>
+    </div>
 
-           <div class="resumen-item resumen-total">
-           <span>Total:</span>
-     <strong>@total.ToString("?#,##0.00")</strong>
-                 </div>
+  <div class="resumen-item resumen-total">
+       <span>Total:</span>
+     <strong>$@total.ToString("N2")</strong>
+         </div>
 
              <button class="btn btn-aura w-100 mb-3" onclick="procesarCompra()">
     <i class="bi bi-credit-card"></i> Procesar Compra

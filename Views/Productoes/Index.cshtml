@@ -290,19 +290,19 @@
         </div>
 <div class="product-card-body">
          <h5 class="product-title">@item.Nombre</h5>
-       <p class="product-subtitle">@item.Categoria?.Nombre</p>
+   <p class="product-subtitle">@item.Categoria?.Nombre</p>
    <p class="product-subtitle mb-0">
    @if (!string.IsNullOrEmpty(item.Color))
  {
       <span>@item.Color</span>
-         }
+   }
      @if (!string.IsNullOrEmpty(item.Talla))
 {
       <span> • @item.Talla</span>
        }
   </p>
-      <div class="product-price">@item.Precio.ToString("₡#,##0.00")</div>
-        <div class="product-sku">SKU: PR-@item.ProductoId.ToString("D6")</div>
+    <div class="product-price">$@item.Precio.ToString("N2")</div>
+     <div class="product-sku">SKU: PR-@item.ProductoId.ToString("D6")</div>
 <div class="stock-badge @(item.Stock > 5 ? "stock-ok" : "stock-low")">
        <i class="bi bi-check-circle-fill"></i>
    @if (item.Stock > 0)
@@ -310,10 +310,10 @@
        <span>En stock (@item.Stock unidades)</span>
  }
      else
-   {
+ {
           <span>Agotado</span>
        }
-     </div>
+   </div>
   
        @* Botón Agregar al Carrito - Visible para todos *@
      <div class="mt-3">

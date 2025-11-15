@@ -122,7 +122,7 @@
                     {
                         <div class="d-flex justify-content-between text-light mb-2">
                             <span>@item.Nombre x@item.Cantidad</span>
-                            <strong>@((item.Cantidad * item.PrecioUnitario).ToString("?#,##0.00"))</strong>
+                            <strong>$@((item.Cantidad * item.PrecioUnitario).ToString("N2"))</strong>
                         </div>
                     }
                 </div>
@@ -131,22 +131,22 @@
 
                 <div class="resumen-item">
                     <span>Subtotal:</span>
-                    <span id="subtotalTexto">@Model.Subtotal.ToString("?#,##0.00")</span>
+                    <span id="subtotalTexto">$@Model.Subtotal.ToString("N2")</span>
                 </div>
 
                 <div class="resumen-item">
                     <span>Descuento:</span>
-                    <span id="descuentoTexto">-@Model.DescuentoMonto.ToString("?#,##0.00")</span>
+                    <span id="descuentoTexto">-$@Model.DescuentoMonto.ToString("N2")</span>
                 </div>
 
                 <div class="resumen-item">
                     <span>Impuesto (13%):</span>
-                    <span id="impuestoTexto">@Model.Impuesto.ToString("?#,##0.00")</span>
+                    <span id="impuestoTexto">$@Model.Impuesto.ToString("N2")</span>
                 </div>
 
                 <div class="resumen-item resumen-total">
                     <span>Total:</span>
-                    <strong id="totalTexto">@Model.Total.ToString("?#,##0.00")</strong>
+                    <strong id="totalTexto">$@Model.Total.ToString("N2")</strong>
                 </div>
             </div>
         </div>
@@ -171,16 +171,16 @@
                 .then(r => r.json())
                 .then(data => {
                     document.getElementById('subtotalTexto').innerText =
-                        data.subtotal.toLocaleString('es-CR', { minimumFractionDigits: 2 });
+                        '$' + data.subtotal.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
                     document.getElementById('descuentoTexto').innerText =
-                        "-" + data.descuentoMonto.toLocaleString('es-CR', { minimumFractionDigits: 2 });
+                        '-$' + data.descuentoMonto.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
                     document.getElementById('impuestoTexto').innerText =
-                        data.impuesto.toLocaleString('es-CR', { minimumFractionDigits: 2 });
+                        '$' + data.impuesto.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
                     document.getElementById('totalTexto').innerText =
-                        data.total.toLocaleString('es-CR', { minimumFractionDigits: 2 });
+                        '$' + data.total.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 });
         });
     </script>
