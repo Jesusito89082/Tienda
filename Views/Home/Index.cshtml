@@ -8,412 +8,411 @@
     <!-- Hero -->
     <section class="hero-section text-center text-light py-5 aura-hero">
         <div class="container">
-      <img src="~/Image/logo.jpg" alt="Aura Logo" class="hero-logo mb-4" />
-       <h1 class="display-3 fw-bold">Aura</h1>
-        <p class="lead">Tu tienda con estilo, tu sistema con alma.</p>
+            <img src="~/Image/logo.jpg" alt="Aura Logo" class="hero-logo mb-4" />
+            <h1 class="display-3 fw-bold">Aura</h1>
+            <p class="lead">Tu tienda con estilo, tu sistema con alma.</p>
         </div>
     </section>
 
     <!-- Misión y Visión -->
     <section class="mision-vision py-5">
-      <div class="container">
-        <div class="row text-center text-light">
-       <div class="col-md-6 mb-4">
-  <div class="p-4 rounded shadow aura-dark-card">
-     <h3 class="fw-bold text-aura">Misión</h3>
-      <p>Ofrecer productos de calidad con un servicio ágil y cercano, potenciando la experiencia de compra a través de la tecnología y el diseño.</p>
-         </div>
-       </div>
-<div class="col-md-6 mb-4">
- <div class="p-4 rounded shadow aura-dark-card">
-   <h3 class="fw-bold text-aura">Visión</h3>
-   <p>Ser la tienda referente en innovación y confianza, donde cada cliente siente la esencia de Aura en cada detalle.</p>
-     </div>
-           </div>
-          </div>
-     </div>
+        <div class="container">
+            <div class="row text-center text-light">
+                <div class="col-md-6 mb-4">
+                    <div class="p-4 rounded shadow aura-dark-card">
+                        <h3 class="fw-bold text-aura">Misión</h3>
+                        <p>Ofrecer productos de calidad con un servicio ágil y cercano, potenciando la experiencia de compra a través de la tecnología y el diseño.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="p-4 rounded shadow aura-dark-card">
+                        <h3 class="fw-bold text-aura">Visión</h3>
+                        <p>Ser la tienda referente en innovación y confianza, donde cada cliente siente la esencia de Aura en cada detalle.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     @if (User.Identity?.IsAuthenticated == true && User.IsInRole("ADMINISTRADOR"))
     {
- <!-- Módulos Administrativos -->
-     <section class="modulos py-5">
-     <div class="container">
-    <h2 class="text-center text-light mb-5">Módulos Administrativos</h2>
-     <div class="row g-4">
-     <div class="col-md-4">
-  <div class="card aura-mod-card text-center">
-        <div class="card-body">
-     <i class="bi bi-tags fs-1 text-aura"></i>
-      <h5 class="card-title mt-3">Categorías</h5>
-    <p class="card-text">Administra las categorías de productos.</p>
-<a asp-controller="Categorias" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-    </div>
-        </div>
-     </div>
-<div class="col-md-4">
-   <div class="card aura-mod-card text-center">
-     <div class="card-body">
-<i class="bi bi-people fs-1 text-aura"></i>
-        <h5 class="card-title mt-3">Clientes</h5>
-        <p class="card-text">Gestiona la información de tus clientes.</p>
-    <a asp-controller="Clientes" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-     </div>
-  </div>
-  </div>
-   <div class="col-md-4">
-    <div class="card aura-mod-card text-center">
-       <div class="card-body">
-      <i class="bi bi-box-seam fs-1 text-aura"></i>
-     <h5 class="card-title mt-3">Productos</h5>
-    <p class="card-text">Controla tu inventario de productos.</p>
-   <a asp-controller="Productoes" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-          </div>
-   </div>
-    </div>
-       <div class="col-md-4">
-        <div class="card aura-mod-card text-center">
-   <div class="card-body">
-    <i class="bi bi-cart-check fs-1 text-aura"></i>
-     <h5 class="card-title mt-3">Ventas</h5>
-  <p class="card-text">Consulta y registra tus ventas.</p>
-     <a asp-controller="Ventas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-    </div>
-       </div>
-    </div>
-      <div class="col-md-4">
-      <div class="card aura-mod-card text-center">
-          <div class="card-body">
-       <i class="bi bi-receipt fs-1 text-aura"></i>
-           <h5 class="card-title mt-3">Detalles de Ventas</h5>
-      <p class="card-text">Revisa cada detalle de tus ventas.</p>
-<a asp-controller="DetallesVentums" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-    </div>
-</div>
-      </div>
-        <div class="col-md-4">
-          <div class="card aura-mod-card text-center">
-       <div class="card-body">
-       <i class="bi bi-file-earmark-text fs-1 text-aura"></i>
-      <h5 class="card-title mt-3">Facturas</h5>
-    <p class="card-text">Genera y gestiona facturas.</p>
-       <a asp-controller="Facturas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-              </div>
-      </div>
-        </div>
-    </div>
-   </div>
+        <!-- Módulos Administrativos -->
+        <section class="modulos py-5">
+            <div class="container">
+                <h2 class="text-center text-light mb-5">Módulos Administrativos</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-tags fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Categorías</h5>
+                                <p class="card-text">Administra las categorías de productos.</p>
+                                <a asp-controller="Categorias" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-people fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Clientes</h5>
+                                <p class="card-text">Gestiona la información de tus clientes.</p>
+                                <a asp-controller="Clientes" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-box-seam fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Productos</h5>
+                                <p class="card-text">Controla tu inventario de productos.</p>
+                                <a asp-controller="Productoes" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-cart-check fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Ventas</h5>
+                                <p class="card-text">Consulta y registra tus ventas.</p>
+                                <a asp-controller="Ventas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-receipt fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Detalles de Ventas</h5>
+                                <p class="card-text">Revisa cada detalle de tus ventas.</p>
+                                <a asp-controller="DetallesVentums" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-file-earmark-text fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Facturas</h5>
+                                <p class="card-text">Genera y gestiona facturas.</p>
+                                <a asp-controller="Facturas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
     }
     else if (User.Identity?.IsAuthenticated == true && User.IsInRole("CAJERO"))
     {
- <!-- Módulos para CAJERO -->
+        <!-- Módulos para CAJERO -->
         <section class="modulos py-5">
-         <div class="container">
-   <h2 class="text-center text-light mb-5">Panel de Cajero</h2>
+            <div class="container">
+                <h2 class="text-center text-light mb-5">Panel de Cajero</h2>
                 <div class="row g-4 justify-content-center">
-  <div class="col-md-4">
-     <div class="card aura-mod-card text-center">
-     <div class="card-body">
-   <i class="bi bi-cart-check fs-1 text-aura"></i>
-       <h5 class="card-title mt-3">Ventas</h5>
-     <p class="card-text">Consulta y registra ventas.</p>
-    <a asp-controller="Ventas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-              </div>
-      </div>
-       </div>
-         <div class="col-md-4">
-       <div class="card aura-mod-card text-center">
-         <div class="card-body">
-          <i class="bi bi-receipt fs-1 text-aura"></i>
-        <h5 class="card-title mt-3">Detalles de Ventas</h5>
-       <p class="card-text">Revisa detalles de ventas.</p>
-     <a asp-controller="DetallesVentums" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-      </div>
-        </div>
-      </div>
-        <div class="col-md-4">
-          <div class="card aura-mod-card text-center">
-      <div class="card-body">
-        <i class="bi bi-file-earmark-text fs-1 text-aura"></i>
-    <h5 class="card-title mt-3">Facturas</h5>
-    <p class="card-text">Genera facturas electrónicas.</p>
-   <a asp-controller="Facturas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-          </div>
-             </div>
- </div>
-          </div>
-    </div>
-   </section>
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-cart-check fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Ventas</h5>
+                                <p class="card-text">Consulta y registra ventas.</p>
+                                <a asp-controller="Ventas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-receipt fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Detalles de Ventas</h5>
+                                <p class="card-text">Revisa detalles de ventas.</p>
+                                <a asp-controller="DetallesVentums" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card aura-mod-card text-center">
+                            <div class="card-body">
+                                <i class="bi bi-file-earmark-text fs-1 text-aura"></i>
+                                <h5 class="card-title mt-3">Facturas</h5>
+                                <p class="card-text">Genera facturas electrónicas.</p>
+                                <a asp-controller="Facturas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     }
     else
     {
-   <!-- Carrusel de Productos para usuarios públicos -->
-<section class="productos-carousel py-5">
-       <div class="container">
-           <h2 class="text-center text-light mb-5">
-    <i class="bi bi-stars"></i> Productos Destacados
-          </h2>
+        <!-- Carrusel de Productos para usuarios públicos -->
+        <section class="productos-carousel py-5">
+            <div class="container">
+                <h2 class="text-center text-light mb-5">
+                    <i class="bi bi-stars"></i> Productos Destacados
+                </h2>
 
-     @if (Model != null && Model.Any())
-    {
-       <div id="productosCarousel" class="carousel slide" data-bs-ride="carousel">
-             <!-- Indicadores -->
-      <div class="carousel-indicators">
-  @for (int i = 0; i < Model.Count(); i++)
-        {
-      <button type="button" 
-      data-bs-target="#productosCarousel" 
-    data-bs-slide-to="@i" 
-  class="@(i == 0 ? "active" : "")"
-         aria-current="@(i == 0 ? "true" : "false")" 
-      aria-label="Slide @(i + 1)">
-   </button>
-          }
-    </div>
+                @if (Model != null && Model.Any())
+                {
+                    <div id="productosCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <!-- Indicadores -->
+                        <div class="carousel-indicators">
+                            @for (int i = 0; i < Model.Count(); i++)
+                            {
+                                <button type="button"
+                                        data-bs-target="#productosCarousel"
+                                        data-bs-slide-to="@i"
+                                        class="@(i == 0 ? "active" : "")"
+                                        aria-current="@(i == 0 ? "true" : "false")"
+                                        aria-label="Slide @(i + 1)">
+                                </button>
+                            }
+                        </div>
 
-             <!-- Items del carrusel -->
-    <div class="carousel-inner">
-       @{
-     int index = 0;
-         }
-          @foreach (var producto in Model)
-   {
-       <div class="carousel-item @(index == 0 ? "active" : "")">
-     <div class="row justify-content-center">
-          <div class="col-md-8 col-lg-6">
-   <div class="card carousel-product-card">
-    <div class="row g-0">
-       <div class="col-md-6">
-     <div class="carousel-image-container">
-       @if (!string.IsNullOrEmpty(producto.ImagenUrl))
-    {
-    <img src="@producto.ImagenUrl" 
-  alt="@producto.Nombre" 
-      class="carousel-product-image" />
-   }
-    else
- {
-      <div class="carousel-no-image">
- <i class="bi bi-image fs-1"></i>
-   </div>
-       }
-        </div>
-    </div>
-      <div class="col-md-6">
-         <div class="card-body d-flex flex-column justify-content-center h-100">
-       <span class="badge bg-aura mb-2 align-self-start">
-  @producto.Categoria?.Nombre
-     </span>
-    <h3 class="card-title text-light mb-3">@producto.Nombre</h3>
-     <p class="card-text text-muted mb-3">
-      @if (!string.IsNullOrEmpty(producto.Color))
-    {
-        <span><i class="bi bi-palette"></i> @producto.Color</span>
-    }
-   @if (!string.IsNullOrEmpty(producto.Talla))
-     {
-          <span class="ms-2"><i class="bi bi-rulers"></i> @producto.Talla</span>
-          }
-    </p>
-     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h4 class="text-aura mb-0">
-      $@producto.Precio.ToString("N2")
-   </h4>
-    @if (producto.Stock > 0)
-        {
-           <span class="badge bg-success">
-     <i class="bi bi-check-circle"></i> En stock (@producto.Stock)
-  </span>
- }
-    else
-  {
-        <span class="badge bg-danger">
-   <i class="bi bi-x-circle"></i> Agotado
-    </span>
-}
-     </div>
-  <div class="d-grid gap-2">
-  <a asp-controller="Productoes" 
-   asp-action="Details" 
-       asp-route-id="@producto.ProductoId"
-class="btn btn-aura">
-         <i class="bi bi-eye"></i> Ver Detalles
-        </a>
-       @if (producto.Stock > 0)
-         {
-  <button class="btn btn-outline-aura"
-     onclick="agregarAlCarritoDesdeCarrusel(@producto.ProductoId, '@producto.Nombre', @producto.Precio)">
-       <i class="bi bi-cart-plus"></i> Agregar al Carrito
-           </button>
-    }
- </div>
-     </div>
-   </div>
-  </div>
-   </div>
-  </div>
-       </div>
-   </div>
- index++;
-         }
-      }
-       </div>
+                        <!-- Items del carrusel -->
+                        <div class="carousel-inner">
+                            @{
+                                int index = 0;
+                            }
+                            @foreach (var producto in Model)
+                            {
+                                <div class="carousel-item @(index == 0 ? "active" : "")">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-8 col-lg-6">
+                                            <div class="card carousel-product-card">
+                                                <div class="row g-0">
+                                                    <div class="col-md-6">
+                                                        <div class="carousel-image-container">
+                                                            @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+                                                            {
+                                                                <img src="@producto.ImagenUrl"
+                                                                     alt="@producto.Nombre"
+                                                                     class="carousel-product-image" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="carousel-no-image">
+                                                                    <i class="bi bi-image fs-1"></i>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="card-body d-flex flex-column justify-content-center h-100">
+                                                            <span class="badge bg-aura mb-2 align-self-start">
+                                                                @producto.Categoria?.Nombre
+                                                            </span>
+                                                            <h3 class="card-title text-light mb-3">@producto.Nombre</h3>
+                                                            <p class="card-text text-muted mb-3">
+                                                                @if (!string.IsNullOrEmpty(producto.Color))
+                                                                {
+                                                                    <span><i class="bi bi-palette"></i> @producto.Color</span>
+                                                                }
+                                                                @if (!string.IsNullOrEmpty(producto.Talla))
+                                                                {
+                                                                    <span class="ms-2"><i class="bi bi-rulers"></i> @producto.Talla</span>
+                                                                }
+                                                            </p>
+                                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                <h4 class="text-aura mb-0">
+                                                                    @producto.Precio.ToString("C")
+                                                                </h4>
+                                                                @if (producto.Stock > 0)
+                                                                {
+                                                                    <span class="badge bg-success">
+                                                                        <i class="bi bi-check-circle"></i> En stock (@producto.Stock)
+                                                                    </span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="badge bg-danger">
+                                                                        <i class="bi bi-x-circle"></i> Agotado
+                                                                    </span>
+                                                                }
+                                                            </div>
+                                                            <div class="d-grid gap-2">
+                                                                <a asp-controller="Productoes"
+                                                                   asp-action="Details"
+                                                                   asp-route-id="@producto.ProductoId"
+                                                                   class="btn btn-aura">
+                                                                    <i class="bi bi-eye"></i> Ver Detalles
+                                                                </a>
+                                                                @if (producto.Stock > 0)
+                                                                {
+                                                                    <button class="btn btn-outline-aura"
+                                                                            onclick="agregarAlCarritoDesdeCarrusel(@producto.ProductoId, '@producto.Nombre', @producto.Precio)">
+                                                                        <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                                                                    </button>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                index++;
+                            }
+                        </div>
 
-             <!-- Controles -->
-         <button class="carousel-control-prev" type="button" data-bs-target="#productosCarousel" data-bs-slide="prev">
-     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Anterior</span>
-  </button>
-     <button class="carousel-control-next" type="button" data-bs-target="#productosCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-           <span class="visually-hidden">Siguiente</span>
-           </button>
-   </div>
-      }
-         else
-        {
-      <div class="alert alert-dark text-center">
-          <i class="bi bi-inbox fs-3"></i>
-       <p class="mb-0 mt-2">No hay productos disponibles en este momento.</p>
-        </div>
-       }
+                        <!-- Controles -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productosCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productosCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-dark text-center">
+                        <i class="bi bi-inbox fs-3"></i>
+                        <p class="mb-0 mt-2">No hay productos disponibles en este momento.</p>
+                    </div>
+                }
 
-          <!-- Llamado a la acción -->
-  <div class="text-center mt-5">
-    <h4 class="text-light mb-3">Explora nuestro catálogo completo</h4>
-         <div class="d-flex gap-3 justify-content-center flex-wrap">
-   <a asp-controller="Productoes" asp-action="Index" class="btn btn-aura btn-lg">
-    <i class="bi bi-shop"></i> Ver Todos los Productos
-        </a>
-           <a asp-controller="Categorias" asp-action="Index" class="btn btn-outline-aura btn-lg">
-   <i class="bi bi-tags"></i> Ver por Categorías
-  </a>
-       <a asp-controller="Carrito" asp-action="Index" class="btn btn-outline-light btn-lg">
-             <i class="bi bi-cart3"></i> Ir al Carrito
-        </a>
-     </div>
-        </div>
-        </div>
-     </section>
+                <!-- Llamado a la acción -->
+                <div class="text-center mt-5">
+                    <h4 class="text-light mb-3">Explora nuestro catálogo completo</h4>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a asp-controller="Productoes" asp-action="Index" class="btn btn-aura btn-lg">
+                            <i class="bi bi-shop"></i> Ver Todos los Productos
+                        </a>
+                        <a asp-controller="Categorias" asp-action="Index" class="btn btn-outline-aura btn-lg">
+                            <i class="bi bi-tags"></i> Ver por Categorías
+                        </a>
+                        <a asp-controller="Carrito" asp-action="Index" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-cart3"></i> Ir al Carrito
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
     }
 </div>
 
 @section Scripts {
     @Html.AntiForgeryToken()
- 
+
     <script>
- function agregarAlCarritoDesdeCarrusel(productoId, nombreProducto, precio) {
-   const button = event.target;
+        function agregarAlCarritoDesdeCarrusel(productoId, nombreProducto, precio) {
+            const button = event.target.closest('button'); // 👈 por si hacen click en el ícono
             const originalContent = button.innerHTML;
 
-button.disabled = true;
-    button.innerHTML = '<i class="bi bi-hourglass-split"></i> Agregando...';
+            button.disabled = true;
+            button.innerHTML = '<i class="bi bi-hourglass-split"></i> Agregando...';
 
-  const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
             fetch('@Url.Action("AgregarProducto", "Carrito")', {
- method: 'POST',
- headers: {
-      'Content-Type': 'application/json',
- 'RequestVerificationToken': token
-     },
-   body: JSON.stringify({
-   productoId: productoId,
-   cantidad: 1
-       })
-   })
-      .then(response => response.json())
-       .then(data => {
-        if (data.success) {
-button.innerHTML = '<i class="bi bi-check-circle"></i> ¡Agregado!';
-     button.classList.add('btn-success');
-    
-  setTimeout(() => {
-           button.innerHTML = originalContent;
-         button.classList.remove('btn-success');
-      button.disabled = false;
-   }, 2000);
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': token
+                },
+                body: JSON.stringify({
+                    productoId: productoId,
+                    cantidad: 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.innerHTML = '<i class="bi bi-check-circle"></i> ¡Agregado!';
+                    button.classList.add('btn-success');
 
-       // Actualizar contador del carrito
-   const contador = document.getElementById('cart-counter');
-      if (contador) {
-  contador.textContent = data.totalItems;
-          contador.style.display = data.totalItems > 0 ? 'inline-block' : 'none';
-    }
-  } else {
-   button.innerHTML = originalContent;
-   button.disabled = false;
-       alert(data.message || 'Error al agregar al carrito');
-     }
-  })
-         .catch(error => {
-               console.error('Error:', error);
-     button.innerHTML = originalContent;
-    button.disabled = false;
-       alert('Error al agregar al carrito');
-     });
+                    setTimeout(() => {
+                        button.innerHTML = originalContent;
+                        button.classList.remove('btn-success');
+                        button.disabled = false;
+                    }, 2000);
+
+                    // Actualizar contador del carrito
+                    const contador = document.getElementById('cart-counter');
+                    if (contador) {
+                        contador.textContent = data.totalItems;
+                        contador.style.display = data.totalItems > 0 ? 'inline-block' : 'none';
+                    }
+                } else {
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                    alert(data.message || 'Error al agregar al carrito');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                button.innerHTML = originalContent;
+                button.disabled = false;
+                alert('Error al agregar al carrito');
+            });
         }
     </script>
 }
 
 @section Styles {
-  <style>
-  .carousel-product-card {
+    <style>
+        .carousel-product-card {
             background-color: #2a2a3e;
-    border-radius: 16px;
-overflow: hidden;
-        border: 2px solid rgba(0, 188, 212, 0.3);
-     }
-
- .carousel-image-container {
-  width: 100%;
-      height: 400px;
-       background-color: #1e1e2f;
-   overflow: hidden;
-  display: flex;
- align-items: center;
-    justify-content: center;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid rgba(0, 188, 212, 0.3);
         }
 
-     .carousel-product-image {
-  width: 100%;
-      height: 100%;
-         object-fit: cover;
-     }
+        .carousel-image-container {
+            width: 100%;
+            height: 400px;
+            background-color: #1e1e2f;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-  .carousel-no-image {
-     width: 100%;
-  height: 100%;
-display: flex;
-  align-items: center;
-     justify-content: center;
-   background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3e 100%);
- color: #666;
-   font-size: 3rem;
-   }
+        .carousel-product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-no-image {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3e 100%);
+            color: #666;
+            font-size: 3rem;
+        }
 
         .carousel-control-prev-icon,
-  .carousel-control-next-icon {
-   background-color: rgba(0, 188, 212, 0.8);
- border-radius: 50%;
-        padding: 20px;
-     }
-
- .carousel-indicators button {
- background-color: rgba(0, 188, 212, 0.5);
-      width: 12px;
-         height: 12px;
-     border-radius: 50%;
+        .carousel-control-next-icon {
+            background-color: rgba(0, 188, 212, 0.8);
+            border-radius: 50%;
+            padding: 20px;
         }
 
-    .carousel-indicators button.active {
- background-color: #00bcd4;
+        .carousel-indicators button {
+            background-color: rgba(0, 188, 212, 0.5);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
         }
 
-    .bg-aura {
-    background-color: #00bcd4;
-color: #121212;
-   }
+            .carousel-indicators button.active {
+                background-color: #00bcd4;
+            }
+
+        .bg-aura {
+            background-color: #00bcd4;
+            color: #121212;
+        }
     </style>
 }

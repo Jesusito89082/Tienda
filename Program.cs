@@ -3,9 +3,10 @@ using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Localization;              // ?? IMPORTANTE
+using Microsoft.Extensions.Options;                  // ?? para IOptions<RequestLocalizationOptions>
 using Tienda.Data;
 using Tienda.Services;
-using System.Text;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ---------------- DI / Servicios ----------------
 builder.Services.AddTransient<EmailService>();           // Servicio de correo
 builder.Services.AddScoped<FacturaService>();            // Servicio de factura
-builder.Services.AddScoped<JwtService>(); // Servicio JWT
+builder.Services.AddScoped<JwtService>();                // Servicio JWT
 
 // Session para el carrito de compras
 builder.Services.AddDistributedMemoryCache();
@@ -72,21 +73,23 @@ builder.Services.AddAntiforgery(options =>
 // DinkToPdf (wkhtmltopdf)
 builder.Services.AddSingleton<IConverter>(new SynchronizedConverter(new PdfTools()));
 
-// ?? Compatibilidad con librerías que usan IO síncrona (DinkToPdf a veces lo requiere)
+// Compatibilidad con IO síncrona (DinkToPdf a veces lo requiere)
 builder.Services.Configure<IISServerOptions>(opt => opt.AllowSynchronousIO = true);
 builder.Services.Configure<KestrelServerOptions>(opt => opt.AllowSynchronousIO = true);
 
-// ?? Localización/Cultura por defecto: es-CR (moneda y fechas)
+// ===== Localización/Cultura por defecto: es-CR (moneda ? y fechas) =====
 var culturaCR = new CultureInfo("es-CR");
 CultureInfo.DefaultThreadCurrentCulture = culturaCR;
 CultureInfo.DefaultThreadCurrentUICulture = culturaCR;
-builder.Services.Configure<Microsoft.AspNetCore.Builder.RequestLocalizationOptions>(options =>
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var supportedCultures = new[] { culturaCR };
-    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(culturaCR);
+    options.DefaultRequestCulture = new RequestCulture(culturaCR);
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 });
+// ======================================================================
 
 var app = builder.Build();
 
@@ -121,13 +124,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession(); // Habilitar sesiones para el carrito
+app.UseSession();        // Habilitar sesiones para el carrito
 
 app.UseAuthentication(); // primero autenticación
 app.UseAuthorization();  // luego autorización
 
-// Localización (debe ir después de Routing y antes de Map*)
-var locOptions = app.Services.GetRequiredService<Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Builder.RequestLocalizationOptions>>();
+// Localización (después de Routing y antes de Map*)
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
 app.UseRequestLocalization(locOptions.Value);
 
 // Rutas MVC convencionales
@@ -135,7 +138,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-// Páginas de Identity/Razor (si usas /Identity/Account/…)
+// Páginas de Identity/Razor
 app.MapRazorPages();
 
 app.Run();

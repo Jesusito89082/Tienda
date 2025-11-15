@@ -67,7 +67,9 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label text-light"><i class="bi bi-person"></i> Nombre Completo *</label>
+                            <label class="form-label text-light">
+                                <i class="bi bi-person"></i> Nombre Completo *
+                            </label>
                             <input asp-for="NuevoNombre" id="nuevoNombre" class="form-control" placeholder="Ej: Juan Pérez" />
                         </div>
 
@@ -122,7 +124,8 @@
                     {
                         <div class="d-flex justify-content-between text-light mb-2">
                             <span>@item.Nombre x@item.Cantidad</span>
-                            <strong>$@((item.Cantidad * item.PrecioUnitario).ToString("N2"))</strong>
+                            <!-- Colones usando cultura (C) -->
+                            <strong>@((item.Cantidad * item.PrecioUnitario).ToString("C"))</strong>
                         </div>
                     }
                 </div>
@@ -131,22 +134,22 @@
 
                 <div class="resumen-item">
                     <span>Subtotal:</span>
-                    <span id="subtotalTexto">$@Model.Subtotal.ToString("N2")</span>
+                    <span id="subtotalTexto">@Model.Subtotal.ToString("C")</span>
                 </div>
 
                 <div class="resumen-item">
                     <span>Descuento:</span>
-                    <span id="descuentoTexto">-$@Model.DescuentoMonto.ToString("N2")</span>
+                    <span id="descuentoTexto">-@Model.DescuentoMonto.ToString("C")</span>
                 </div>
 
                 <div class="resumen-item">
                     <span>Impuesto (13%):</span>
-                    <span id="impuestoTexto">$@Model.Impuesto.ToString("N2")</span>
+                    <span id="impuestoTexto">@Model.Impuesto.ToString("C")</span>
                 </div>
 
                 <div class="resumen-item resumen-total">
                     <span>Total:</span>
-                    <strong id="totalTexto">$@Model.Total.ToString("N2")</strong>
+                    <strong id="totalTexto">@Model.Total.ToString("C")</strong>
                 </div>
             </div>
         </div>
@@ -170,17 +173,18 @@
             fetch(`/Carrito/ObtenerTotal?descuentoPorcentaje=${val}`)
                 .then(r => r.json())
                 .then(data => {
-                    document.getElementById('subtotalTexto').innerText =
-                        '$' + data.subtotal.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-                    document.getElementById('descuentoTexto').innerText =
-                        '-$' + data.descuentoMonto.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const formatoCRC = { style: 'currency', currency: 'CRC', minimumFractionDigits: 2, maximumFractionDigits: 2 };
 
-                    document.getElementById('impuestoTexto').innerText =
-                        '$' + data.impuesto.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    const subtotalTxt = data.subtotal.toLocaleString('es-CR', formatoCRC);
+                    const descuentoTxt = data.descuentoMonto.toLocaleString('es-CR', formatoCRC);
+                    const impuestoTxt = data.impuesto.toLocaleString('es-CR', formatoCRC);
+                    const totalTxt = data.total.toLocaleString('es-CR', formatoCRC);
 
-                    document.getElementById('totalTexto').innerText =
-                        '$' + data.total.toLocaleString('es-CR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    document.getElementById('subtotalTexto').innerText = subtotalTxt;
+                    document.getElementById('descuentoTexto').innerText = '-' + descuentoTxt;
+                    document.getElementById('impuestoTexto').innerText = impuestoTxt;
+                    document.getElementById('totalTexto').innerText = totalTxt;
                 });
         });
     </script>
