@@ -11,20 +11,33 @@ using Tienda.Models;
 
 namespace Tienda.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR")]
     public class CategoriasController : Controller
     {
         private readonly ApplicationDbContext _context;
 
         public CategoriasController(ApplicationDbContext context) => _context = context;
 
-        // GET: Categorias
+        // GET: Categorias - Vista pública con productos
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Categorias.ToListAsync());
+            // Si es admin, mostrar vista de gestión
+            if (User.Identity?.IsAuthenticated == true && User.IsInRole("ADMINISTRADOR"))
+            {
+                return View("AdminIndex", await _context.Categorias.ToListAsync());
+            }
+
+            // Si es público, mostrar categorías con productos
+            var categorias = await _context.Categorias
+                .Include(c => c.Productos)
+                .OrderBy(c => c.Nombre)
+                .ToListAsync();
+
+            return View("PublicIndex", categorias);
         }
 
         // GET: Categorias/Details/5
+        [Authorize(Roles = "ADMINISTRADOR")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,6 +56,7 @@ namespace Tienda.Controllers
         }
 
         // GET: Categorias/Create
+        [Authorize(Roles = "ADMINISTRADOR")]
         public IActionResult Create()
         {
             return View();

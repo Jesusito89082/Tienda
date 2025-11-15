@@ -1,0 +1,289 @@
+@model IEnumerable<Tienda.Models.Categoria>
+
+@{
+    ViewData["Title"] = "Categorías";
+}
+
+<div class="container my-5">
+    <section class="text-center text-light mb-5">
+ <h1 class="display-4 fw-bold">
+            <i class="bi bi-tags-fill"></i> Explora por Categorías
+        </h1>
+        <p class="lead">Encuentra tus productos favoritos organizados por categoría</p>
+    </section>
+
+    @if (Model != null && Model.Any())
+  {
+ @foreach (var categoria in Model)
+        {
+      @if (categoria.Productos != null && categoria.Productos.Any())
+      {
+    <div class="categoria-section mb-5">
+ <div class="categoria-header d-flex justify-content-between align-items-center mb-4">
+               <h2 class="text-aura fw-bold mb-0">
+         <i class="bi bi-tag-fill"></i> @categoria.Nombre
+     </h2>
+             <span class="badge bg-aura fs-6">@categoria.Productos.Count() productos</span>
+  </div>
+
+       <div class="row g-4">
+    @foreach (var producto in categoria.Productos)
+       {
+             <div class="col-md-6 col-lg-3">
+        <div class="product-card">
+             <div class="product-image-container">
+        @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+           {
+ <img src="@producto.ImagenUrl" alt="@producto.Nombre" class="product-image" />
+  }
+             else
+        {
+            <div class="no-image-placeholder">
+ <i class="bi bi-image fs-1"></i>
+         </div>
+              }
+   
+            @if (producto.Stock <= 5 && producto.Stock > 0)
+            {
+               <span class="badge-stock-low">¡Últimas @producto.Stock!</span>
+       }
+         </div>
+            <div class="card-body">
+        <h6 class="product-title">@producto.Nombre</h6>
+     <p class="product-details text-muted mb-2">
+            @if (!string.IsNullOrEmpty(producto.Color))
+          {
+       <span><i class="bi bi-palette"></i> @producto.Color</span>
+      }
+               @if (!string.IsNullOrEmpty(producto.Talla))
+{
+          <span class="ms-2"><i class="bi bi-rulers"></i> @producto.Talla</span>
+         }
+              </p>
+         <div class="d-flex justify-content-between align-items-center mb-3">
+      <span class="product-price">@producto.Precio.ToString("?#,##0.00")</span>
+       @if (producto.Stock > 0)
+       {
+ <span class="badge bg-success">En stock</span>
+            }
+           else
+              {
+     <span class="badge bg-danger">Agotado</span>
+   }
+     </div>
+       <div class="d-grid gap-2">
+            <a asp-controller="Productoes" asp-action="Details" asp-route-id="@producto.ProductoId" 
+             class="btn btn-outline-aura btn-sm">
+    <i class="bi bi-eye"></i> Ver Detalles
+       </a>
+    @if (producto.Stock > 0)
+  {
+           <button class="btn btn-aura btn-sm"
+      onclick="agregarAlCarrito(@producto.ProductoId, '@producto.Nombre', @producto.Precio)">
+     <i class="bi bi-cart-plus"></i> Agregar al Carrito
+              </button>
+        }
+                  </div>
+    </div>
+ </div>
+          </div>
+             }
+          </div>
+    </div>
+     }
+        }
+    }
+    else
+    {
+        <div class="alert alert-dark text-center">
+            <i class="bi bi-inbox fs-3"></i>
+            <p class="mb-0 mt-2">No hay categorías con productos disponibles en este momento.</p>
+        </div>
+    }
+
+    <!-- Llamado a la acción -->
+    <div class="text-center mt-5">
+        <h4 class="text-light mb-3">¿No encuentras lo que buscas?</h4>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a asp-controller="Productoes" asp-action="Index" class="btn btn-aura btn-lg">
+          <i class="bi bi-grid-3x3"></i> Ver Todos los Productos
+    </a>
+       <a asp-controller="Carrito" asp-action="Index" class="btn btn-outline-light btn-lg">
+             <i class="bi bi-cart3"></i> Ir al Carrito
+ </a>
+     </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Html.AntiForgeryToken()
+    
+    <script>
+   function agregarAlCarrito(productoId, nombreProducto, precio) {
+      const button = event.target;
+  const originalContent = button.innerHTML;
+
+       button.disabled = true;
+    button.innerHTML = '<i class="bi bi-hourglass-split"></i> Agregando...';
+
+         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+       fetch('@Url.Action("AgregarProducto", "Carrito")', {
+     method: 'POST',
+      headers: {
+              'Content-Type': 'application/json',
+          'RequestVerificationToken': token
+        },
+    body: JSON.stringify({
+           productoId: productoId,
+     cantidad: 1
+          })
+            })
+            .then(response => response.json())
+      .then(data => {
+   if (data.success) {
+               button.innerHTML = '<i class="bi bi-check-circle"></i> ¡Agregado!';
+            button.classList.add('btn-success');
+         button.classList.remove('btn-aura');
+       
+     setTimeout(() => {
+                 button.innerHTML = originalContent;
+         button.classList.remove('btn-success');
+      button.classList.add('btn-aura');
+    button.disabled = false;
+      }, 2000);
+
+    // Actualizar contador del carrito
+                    const contador = document.getElementById('cart-counter');
+    if (contador) {
+       contador.textContent = data.totalItems;
+      contador.style.display = data.totalItems > 0 ? 'inline-block' : 'none';
+            }
+         } else {
+          button.innerHTML = originalContent;
+      button.disabled = false;
+           alert(data.message || 'Error al agregar al carrito');
+      }
+            })
+  .catch(error => {
+    console.error('Error:', error);
+             button.innerHTML = originalContent;
+    button.disabled = false;
+      alert('Error al agregar al carrito');
+    });
+        }
+    </script>
+}
+
+@section Styles {
+ <style>
+        .categoria-section {
+            background-color: rgba(30, 30, 47, 0.5);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 188, 212, 0.2);
+  }
+
+        .categoria-header {
+   border-bottom: 2px solid rgba(0, 188, 212, 0.3);
+    padding-bottom: 1rem;
+}
+
+        .product-card {
+     background-color: #2a2a3e;
+ border-radius: 12px;
+      overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+   height: 100%;
+     display: flex;
+            flex-direction: column;
+ }
+
+     .product-card:hover {
+            transform: translateY(-5px);
+     box-shadow: 0 8px 20px rgba(0, 188, 212, 0.3);
+    }
+
+    .product-image-container {
+         position: relative;
+       width: 100%;
+    height: 220px;
+            background-color: #1e1e2f;
+    overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+      height: 100%;
+            object-fit: cover;
+        }
+
+        .no-image-placeholder {
+        width: 100%;
+            height: 100%;
+       display: flex;
+       align-items: center;
+     justify-content: center;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3e 100%);
+color: #666;
+        }
+
+ .badge-stock-low {
+    position: absolute;
+      top: 10px;
+     right: 10px;
+    background-color: #ff5252;
+       color: white;
+       padding: 0.3rem 0.6rem;
+         border-radius: 20px;
+            font-size: 0.75rem;
+    font-weight: 600;
+        }
+
+        .product-title {
+       font-size: 1rem;
+  font-weight: 700;
+color: #f1f1f1;
+   margin-bottom: 0.5rem;
+        }
+
+        .product-details {
+         font-size: 0.85rem;
+     margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 800;
+     color: #00bcd4;
+        }
+
+        .bg-aura {
+            background-color: #00bcd4;
+            color: #121212;
+   }
+
+    .btn-aura {
+            background-color: #00bcd4;
+   color: #121212;
+            border: none;
+font-weight: 600;
+        }
+
+     .btn-aura:hover {
+            background-color: #00acc1;
+    color: #fff;
+  }
+
+        .btn-outline-aura {
+      border: 1px solid #00bcd4;
+color: #00bcd4;
+   font-weight: 600;
+        }
+
+        .btn-outline-aura:hover {
+  background-color: #00bcd4;
+            color: #121212;
+        }
+    </style>
+}
