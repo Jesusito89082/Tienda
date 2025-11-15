@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Tienda.ViewModels.ProductoMasVendidoViewModel>
+
+@{
+    ViewData["Title"] = "Productos más vendidos";
+}
+
+<div class="container my-5">
+    <h1 class="mb-3">Productos más vendidos</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Todavía no hay ventas registradas.
+        </div>
+    }
+    else
+    {
+        <table class="table aura-table table-hover">
+
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Cantidad vendida</th>
+                    <th class="text-end">Total vendido</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.Nombre</td>
+                        <td class="text-center">@p.CantidadVendida</td>
+                        <td class="text-end">@p.TotalVendido.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

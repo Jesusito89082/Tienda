@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Tienda.ViewModels.InventarioProductoViewModel>
+
+@{
+    ViewData["Title"] = "Inventario";
+}
+
+<div class="container my-5">
+    <h1 class="mb-3">Inventario de productos</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No hay productos registrados.
+        </div>
+    }
+    else
+    {
+        <table class="table aura-table table-hover">
+
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Stock</th>
+                    <th class="text-end">Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    var claseStock = p.Stock <= 5 ? "text-danger fw-bold" : "";
+
+                    <tr>
+                        <td>@p.Nombre</td>
+                        <td class="text-center @claseStock">@p.Stock</td>
+                        <td class="text-end">@p.Precio.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
