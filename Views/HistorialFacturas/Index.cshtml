@@ -1,0 +1,190 @@
+@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Historial de Facturas por Cliente";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light fw-bold">
+     <i class="bi bi-clock-history"></i> Historial de Facturas
+        </h2>
+        <div>
+       <a asp-action="Estadisticas" class="btn btn-aura">
+    <i class="bi bi-bar-chart"></i> Estadísticas Globales
+  </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-dark text-center">
+            <i class="bi bi-inbox fs-3"></i>
+    <p class="mb-0 mt-2">No hay clientes con compras registradas aún.</p>
+        </div>
+    }
+    else
+    {
+   <div class="row g-4">
+  @foreach (var item in Model)
+    {
+       <div class="col-md-6 col-lg-4">
+ <div class="card cliente-card">
+     <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+           <h5 class="card-title text-light mb-1">@item.Cliente.Nombre</h5>
+          <p class="text-muted mb-0 small">
+        <i class="bi bi-envelope"></i> @item.Cliente.Email
+          </p>
+            </div>
+       <span class="badge bg-aura">@item.TotalCompras compras</span>
+           </div>
+
+         <div class="cliente-stats">
+     <div class="stat-item">
+  <div class="stat-icon">
+ <i class="bi bi-cart-check"></i>
+       </div>
+       <div class="stat-info">
+         <span class="stat-label">Productos Comprados</span>
+   <span class="stat-value">@item.TotalProductos</span>
+       </div>
+            </div>
+
+        <div class="stat-item">
+ <div class="stat-icon text-success">
+            <i class="bi bi-cash-stack"></i>
+        </div>
+    <div class="stat-info">
+        <span class="stat-label">Total Gastado</span>
+     <span class="stat-value text-success">@item.TotalGastado.ToString("?#,##0.00")</span>
+        </div>
+              </div>
+
+       <div class="stat-item">
+     <div class="stat-icon text-info">
+    <i class="bi bi-file-earmark-text"></i>
+         </div>
+        <div class="stat-info">
+       <span class="stat-label">Facturas</span>
+ <span class="stat-value">@item.TotalFacturas</span>
+  </div>
+ </div>
+
+    @if (item.UltimaCompra != null)
+     {
+            <div class="stat-item">
+          <div class="stat-icon text-warning">
+       <i class="bi bi-calendar-check"></i>
+                 </div>
+<div class="stat-info">
+             <span class="stat-label">Última Compra</span>
+         <span class="stat-value small">@item.UltimaCompra?.ToString("dd/MM/yyyy")</span>
+</div>
+                 </div>
+      }
+   </div>
+
+      <div class="d-grid gap-2 mt-3">
+       <a asp-action="DetalleCliente" asp-route-id="@item.Cliente.ClienteId" 
+    class="btn btn-outline-aura btn-sm">
+         <i class="bi bi-eye"></i> Ver Historial Completo
+           </a>
+  <div class="btn-group">
+                  <a asp-action="FacturasCliente" asp-route-id="@item.Cliente.ClienteId" 
+        class="btn btn-sm btn-outline-info">
+    <i class="bi bi-receipt"></i> Facturas
+          </a>
+      <a asp-action="ProductosCliente" asp-route-id="@item.Cliente.ClienteId" 
+      class="btn btn-sm btn-outline-success">
+    <i class="bi bi-box"></i> Productos
+         </a>
+           </div>
+   </div>
+   </div>
+           </div>
+             </div>
+            }
+   </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .cliente-card {
+        background-color: #2a2a3e;
+    border: 1px solid rgba(0, 188, 212, 0.3);
+            border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cliente-card:hover {
+            transform: translateY(-5px);
+     box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4);
+        }
+
+   .cliente-stats {
+       display: flex;
+   flex-direction: column;
+     gap: 0.8rem;
+        }
+
+   .stat-item {
+      display: flex;
+       align-items: center;
+            gap: 0.8rem;
+      padding: 0.5rem;
+     background-color: rgba(30, 30, 47, 0.5);
+            border-radius: 8px;
+}
+
+        .stat-icon {
+            font-size: 1.5rem;
+         color: #00bcd4;
+     }
+
+        .stat-info {
+   display: flex;
+    flex-direction: column;
+        }
+
+        .stat-label {
+   font-size: 0.75rem;
+            color: #999;
+        }
+
+        .stat-value {
+       font-size: 1rem;
+            font-weight: 700;
+   color: #f1f1f1;
+        }
+
+      .bg-aura {
+            background-color: #00bcd4;
+            color: #121212;
+        }
+
+  .btn-aura {
+         background-color: #00bcd4;
+            color: #121212;
+    border: none;
+      font-weight: 600;
+}
+
+        .btn-aura:hover {
+            background-color: #00acc1;
+       color: #fff;
+ }
+
+        .btn-outline-aura {
+     border: 1px solid #00bcd4;
+  color: #00bcd4;
+ }
+
+        .btn-outline-aura:hover {
+          background-color: #00bcd4;
+   color: #121212;
+    }
+    </style>
+}

@@ -1,0 +1,158 @@
+@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = $"Productos Comprados por {ViewBag.Cliente.Nombre}";
+    var cliente = ViewBag.Cliente as Tienda.Models.Cliente;
+}
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-md-12">
+  <div class="d-flex justify-content-between align-items-center">
+    <h2 class="text-light fw-bold">
+ <i class="bi bi-box-seam"></i> Productos Comprados por @cliente.Nombre
+            </h2>
+       <a asp-action="DetalleCliente" asp-route-id="@cliente.ClienteId" class="btn btn-outline-light">
+           <i class="bi bi-arrow-left"></i> Volver al Historial
+       </a>
+         </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-dark text-center">
+            <i class="bi bi-inbox fs-3"></i>
+        <p class="mb-0 mt-2">Este cliente no ha comprado productos aún.</p>
+        </div>
+    }
+    else
+    {
+   <div class="table-responsive">
+         <table class="table table-dark table-hover">
+<thead>
+<tr class="table-header-aura">
+ <th>#</th>
+<th>Producto</th>
+      <th>Categoría</th>
+           <th class="text-center">Cantidad Total</th>
+            <th class="text-center">Veces Comprado</th>
+            <th class="text-end">Total Gastado</th>
+        </tr>
+      </thead>
+             <tbody>
+               @{
+         int index = 1;
+        }
+   @foreach (var producto in Model)
+     {
+    <tr>
+            <td>
+      @if (index <= 3)
+     {
+  <span class="badge bg-warning text-dark">
+   @if (index == 1) { <text>??</text> }
+    else if (index == 2) { <text>??</text> }
+        else { <text>??</text> }
+         </span>
+           }
+                  else
+       {
+           <span>@index</span>
+        }
+   </td>
+    <td>
+      <strong>@producto.Nombre</strong>
+  </td>
+                  <td>
+   <span class="badge bg-secondary">@producto.Categoria</span>
+      </td>
+       <td class="text-center">
+              <span class="badge bg-primary">@producto.CantidadTotal unidades</span>
+          </td>
+    <td class="text-center">
+        <span class="badge bg-info text-dark">@producto.VecesComprado compras</span>
+        </td>
+  <td class="text-end">
+    <span class="text-success fw-bold">@producto.TotalGastado.ToString("?#,##0.00")</span>
+             </td>
+        </tr>
+          index++;
+    }
+        </tbody>
+  <tfoot>
+     <tr class="table-footer">
+              <td colspan="3" class="text-end fw-bold">TOTALES:</td>
+       <td class="text-center fw-bold">@Model.Sum(p => p.CantidadTotal) unidades</td>
+    <td class="text-center fw-bold">@Model.Sum(p => p.VecesComprado) compras</td>
+     <td class="text-end fw-bold text-success">@Model.Sum(p => p.TotalGastado).ToString("?#,##0.00")</td>
+        </tr>
+</tfoot>
+  </table>
+        </div>
+
+        <!-- Gráfico de productos más comprados (visualización) -->
+        <div class="row mt-4">
+         <div class="col-md-12">
+         <div class="card bg-dark text-light">
+         <div class="card-header">
+    <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Top 5 Productos Más Comprados</h5>
+             </div>
+        <div class="card-body">
+        @{
+var top5 = Model.Take(5).ToList();
+     var maxCantidad = top5.Any() ? top5.Max(p => p.CantidadTotal) : 1;
+   }
+    @foreach (var producto in top5)
+     {
+       var porcentaje = maxCantidad > 0 ? (double)producto.CantidadTotal / maxCantidad * 100 : 0;
+           <div class="mb-3">
+        <div class="d-flex justify-content-between mb-1">
+     <span>@producto.Nombre</span>
+    <span class="text-aura fw-bold">@producto.CantidadTotal unidades</span>
+        </div>
+  <div class="progress" style="height: 25px;">
+               <div class="progress-bar bg-aura" 
+            role="progressbar" 
+style="width: @porcentaje%" 
+         aria-valuenow="@producto.CantidadTotal" 
+    aria-valuemin="0" 
+         aria-valuemax="@maxCantidad">
+             @producto.TotalGastado.ToString("?#,##0")
+     </div>
+     </div>
+        </div>
+             }
+        </div>
+      </div>
+       </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .table-header-aura {
+    background-color: #1e1e2f;
+   border-bottom: 2px solid #00bcd4;
+        }
+
+  .table-footer {
+    background-color: #1e1e2f;
+       border-top: 2px solid #00bcd4;
+        }
+
+     .bg-aura {
+     background-color: #00bcd4 !important;
+            color: #121212;
+        }
+
+        .text-aura {
+     color: #00bcd4;
+        }
+
+        .progress {
+            background-color: #1e1e2f;
+    }
+    </style>
+}

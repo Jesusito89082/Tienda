@@ -11,7 +11,7 @@ using Tienda.Models;
 
 namespace Tienda.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR")]
+    [Authorize(Roles = "ADMINISTRADOR,CAJERO")]
     public class DetallesVentumsController : Controller
     {
         private readonly ApplicationDbContext _context;

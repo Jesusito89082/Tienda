@@ -9,6 +9,9 @@
         <h2 class="text-aura fw-bold">
             <i class="bi bi-receipt"></i> Facturas
         </h2>
+        <a asp-controller="HistorialFacturas" asp-action="Index" class="btn btn-aura">
+            <i class="bi bi-clock-history"></i> Historial por Cliente
+        </a>
     </div>
 
     @if (!Model.Any())

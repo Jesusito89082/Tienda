@@ -16,4 +16,6 @@ public partial class Venta
     public virtual Cliente? Cliente { get; set; }
 
     public virtual ICollection<DetallesVentum> DetallesVenta { get; set; } = new List<DetallesVentum>();
+    
+    public virtual ICollection<Factura> Facturas { get; set; } = new List<Factura>();
 }

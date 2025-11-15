@@ -1,0 +1,235 @@
+@model Tienda.Models.Cliente
+
+@{
+    ViewData["Title"] = $"Historial de {Model.Nombre}";
+}
+
+<div class="container my-5">
+  <!-- Encabezado del cliente -->
+    <div class="row mb-4">
+    <div class="col-md-12">
+       <div class="card bg-dark text-light border-aura">
+       <div class="card-body">
+   <div class="row align-items-center">
+ <div class="col-md-8">
+          <h3 class="mb-2">
+     <i class="bi bi-person-circle"></i> @Model.Nombre
+          </h3>
+          <p class="mb-1 text-muted"><i class="bi bi-envelope"></i> @Model.Email</p>
+     <p class="mb-1 text-muted"><i class="bi bi-telephone"></i> @Model.Telefono</p>
+          <p class="mb-0 text-muted"><i class="bi bi-geo-alt"></i> @Model.Direccion</p>
+   </div>
+    <div class="col-md-4 text-end">
+       <a asp-action="Index" class="btn btn-outline-light">
+       <i class="bi bi-arrow-left"></i> Volver
+    </a>
+     </div>
+        </div>
+</div>
+  </div>
+   </div>
+    </div>
+
+ <!-- Estadísticas Generales -->
+    <div class="row g-4 mb-4">
+  <div class="col-md-3">
+ <div class="stat-card bg-primary">
+    <div class="stat-icon"><i class="bi bi-cart-check"></i></div>
+ <div class="stat-content">
+   <h4>@ViewBag.TotalCompras</h4>
+     <p>Compras Realizadas</p>
+ </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+       <div class="stat-card bg-success">
+   <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+<div class="stat-content">
+ <h4>@ViewBag.TotalProductos</h4>
+         <p>Productos Comprados</p>
+  </div>
+           </div>
+        </div>
+    <div class="col-md-3">
+<div class="stat-card bg-warning text-dark">
+       <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+      <div class="stat-content">
+    <h4>@ViewBag.TotalGastado.ToString("?#,##0")</h4>
+    <p>Total Gastado</p>
+             </div>
+        </div>
+ </div>
+  <div class="col-md-3">
+    <div class="stat-card bg-info text-dark">
+      <div class="stat-icon"><i class="bi bi-calculator"></i></div>
+   <div class="stat-content">
+       <h4>@ViewBag.PromedioCompra.ToString("?#,##0")</h4>
+     <p>Promedio por Compra</p>
+       </div>
+     </div>
+ </div>
+    </div>
+
+ @if (ViewBag.ProductoMasComprado != null)
+    {
+  <div class="alert alert-info">
+      <i class="bi bi-star-fill"></i> 
+       <strong>Producto Favorito:</strong> @ViewBag.ProductoMasComprado.Nombre 
+    (@ViewBag.ProductoMasComprado.Cantidad unidades compradas)
+  </div>
+    }
+
+  <!-- Botones de Acceso Rápido -->
+    <div class="row mb-4">
+      <div class="col-md-12">
+     <div class="btn-group w-100">
+   <a asp-action="FacturasCliente" asp-route-id="@Model.ClienteId" class="btn btn-outline-aura">
+         <i class="bi bi-file-earmark-text"></i> Ver Facturas
+     </a>
+  <a asp-action="ProductosCliente" asp-route-id="@Model.ClienteId" class="btn btn-outline-aura">
+         <i class="bi bi-box"></i> Productos Comprados
+       </a>
+ </div>
+        </div>
+    </div>
+
+  <!-- Historial de Compras -->
+    <h4 class="text-light mb-3"><i class="bi bi-clock-history"></i> Historial de Compras</h4>
+
+    @if (!Model.Venta.Any())
+    {
+        <div class="alert alert-dark text-center">
+     <i class="bi bi-inbox fs-3"></i>
+     <p class="mb-0 mt-2">Este cliente no tiene compras registradas.</p>
+        </div>
+    }
+    else
+ {
+        @foreach (var venta in Model.Venta)
+        {
+<div class="card venta-card mb-3">
+       <div class="card-header d-flex justify-content-between align-items-center">
+         <div>
+      <h5 class="mb-0">
+      <i class="bi bi-receipt"></i> Venta #@venta.VentaId
+     </h5>
+   <small class="text-muted">@venta.Fecha?.ToString("dd/MM/yyyy HH:mm")</small>
+       </div>
+          <div>
+        <span class="badge bg-success fs-6">@venta.Total?.ToString("?#,##0.00")</span>
+         </div>
+   </div>
+    <div class="card-body">
+     <h6 class="text-muted mb-3">Productos:</h6>
+    <div class="table-responsive">
+      <table class="table table-dark table-sm">
+        <thead>
+       <tr>
+            <th>Producto</th>
+   <th>Categoría</th>
+      <th class="text-center">Cantidad</th>
+     <th class="text-end">Precio Unit.</th>
+     <th class="text-end">Subtotal</th>
+  </tr>
+       </thead>
+  <tbody>
+       @foreach (var detalle in venta.DetallesVenta)
+     {
+   <tr>
+        <td>@detalle.Producto?.Nombre</td>
+       <td>
+   <span class="badge bg-secondary">@detalle.Producto?.Categoria?.Nombre</span>
+      </td>
+    <td class="text-center">@detalle.Cantidad</td>
+        <td class="text-end">@detalle.PrecioUnitario.ToString("?#,##0.00")</td>
+<td class="text-end fw-bold">@((detalle.Cantidad * detalle.PrecioUnitario).ToString("?#,##0.00"))</td>
+ </tr>
+ }
+</tbody>
+  </table>
+   </div>
+
+    @if (venta.Facturas != null && venta.Facturas.Any())
+    {
+  <div class="alert alert-success mt-3 mb-0">
+    <i class="bi bi-check-circle"></i> 
+    <strong>Facturado:</strong>
+         @foreach (var factura in venta.Facturas)
+        {
+ <a asp-controller="Facturas" asp-action="Details" asp-route-id="@factura.FacturaId" 
+       class="btn btn-sm btn-outline-success ms-2">
+<i class="bi bi-file-pdf"></i> Factura #@factura.FacturaId
+       </a>
+   }
+       </div>
+   }
+   else
+    {
+   <div class="alert alert-warning mt-3 mb-0">
+             <i class="bi bi-exclamation-triangle"></i> 
+  <strong>Sin factura generada</strong>
+       <a asp-controller="Facturas" asp-action="Generar" asp-route-ventaId="@venta.VentaId" 
+  class="btn btn-sm btn-warning ms-2">
+   <i class="bi bi-plus-circle"></i> Generar Factura
+       </a>
+    </div>
+   }
+   </div>
+   </div>
+        }
+    }
+</div>
+
+@section Styles {
+    <style>
+        .border-aura {
+   border: 2px solid #00bcd4;
+        }
+
+   .stat-card {
+ padding: 1.5rem;
+      border-radius: 12px;
+         color: white;
+            display: flex;
+      align-items: center;
+       gap: 1rem;
+        }
+
+        .stat-icon {
+       font-size: 2.5rem;
+        opacity: 0.8;
+        }
+
+   .stat-content h4 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 800;
+        }
+
+   .stat-content p {
+    margin: 0;
+font-size: 0.9rem;
+    opacity: 0.9;
+     }
+
+        .venta-card {
+    background-color: #2a2a3e;
+     border: 1px solid rgba(0, 188, 212, 0.3);
+  }
+
+   .venta-card .card-header {
+      background-color: #1e1e2f;
+            border-bottom: 1px solid rgba(0, 188, 212, 0.3);
+        }
+
+   .btn-outline-aura {
+   border: 1px solid #00bcd4;
+            color: #00bcd4;
+        }
+
+        .btn-outline-aura:hover {
+   background-color: #00bcd4;
+            color: #121212;
+  }
+  </style>
+}

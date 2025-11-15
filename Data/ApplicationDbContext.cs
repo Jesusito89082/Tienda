@@ -105,7 +105,7 @@ namespace Tienda.Data
                 entity.Property(e => e.Estado).HasMaxLength(20);
 
                 entity.HasOne(f => f.Venta)
-                      .WithMany()
+                      .WithMany(v => v.Facturas)
                       .HasForeignKey(f => f.VentaId)
                       .OnDelete(DeleteBehavior.Cascade);
             });

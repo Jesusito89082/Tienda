@@ -1,0 +1,264 @@
+@{
+    ViewData["Title"] = "Estadísticas Globales";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light fw-bold">
+            <i class="bi bi-bar-chart-fill"></i> Estadísticas Globales
+  </h2>
+        <a asp-action="Index" class="btn btn-outline-light">
+      <i class="bi bi-arrow-left"></i> Volver
+     </a>
+    </div>
+
+    <!-- Estadísticas Principales -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+       <div class="stat-card bg-primary">
+      <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+         <div class="stat-content">
+       <h4>@ViewBag.TotalClientes</h4>
+      <p>Clientes Registrados</p>
+          <small>@ViewBag.ClientesConCompras con compras</small>
+    </div>
+         </div>
+        </div>
+  <div class="col-md-3">
+     <div class="stat-card bg-success">
+        <div class="stat-icon"><i class="bi bi-cart-check-fill"></i></div>
+    <div class="stat-content">
+       <h4>@ViewBag.TotalVentas</h4>
+     <p>Ventas Realizadas</p>
+        </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+     <div class="stat-card bg-warning text-dark">
+            <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+   <div class="stat-content">
+        <h4>@ViewBag.TotalFacturado.ToString("?#,##0")</h4>
+         <p>Total Facturado</p>
+     </div>
+  </div>
+        </div>
+        <div class="col-md-3">
+      <div class="stat-card bg-info text-dark">
+   <div class="stat-icon"><i class="bi bi-calculator-fill"></i></div>
+        <div class="stat-content">
+    <h4>@ViewBag.PromedioVenta.ToString("?#,##0")</h4>
+     <p>Promedio por Venta</p>
+      </div>
+   </div>
+ </div>
+    </div>
+
+    <!-- Top Clientes -->
+    <div class="row g-4 mb-4">
+   <div class="col-md-6">
+      <div class="card bg-dark text-light border-aura">
+      <div class="card-header">
+   <h5 class="mb-0"><i class="bi bi-trophy-fill text-warning"></i> Cliente Top Gastador</h5>
+    </div>
+     <div class="card-body">
+        @if (ViewBag.ClienteTopGastador != null)
+    {
+    <div class="top-cliente-card">
+<div class="cliente-info">
+         <h4 class="text-aura">@ViewBag.ClienteTopGastador.Cliente.Nombre</h4>
+        <p class="mb-1"><i class="bi bi-envelope"></i> @ViewBag.ClienteTopGastador.Cliente.Email</p>
+      <p class="mb-0"><i class="bi bi-telephone"></i> @ViewBag.ClienteTopGastador.Cliente.Telefono</p>
+      </div>
+       <div class="cliente-amount">
+         <div class="amount-badge">
+   <span class="amount-label">Total Gastado</span>
+  <span class="amount-value">@ViewBag.ClienteTopGastador.TotalGastado.ToString("?#,##0.00")</span>
+   </div>
+       <a asp-action="DetalleCliente" asp-route-id="@ViewBag.ClienteTopGastador.Cliente.ClienteId" 
+  class="btn btn-aura btn-sm mt-2">
+   <i class="bi bi-eye"></i> Ver Historial
+     </a>
+   </div>
+  </div>
+    }
+   else
+  {
+   <p class="text-muted">No hay datos disponibles</p>
+  }
+    </div>
+       </div>
+        </div>
+
+        <div class="col-md-6">
+      <div class="card bg-dark text-light border-aura">
+ <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-star-fill text-warning"></i> Cliente Top Comprador</h5>
+      </div>
+    <div class="card-body">
+  @if (ViewBag.ClienteTopComprador != null)
+    {
+     <div class="top-cliente-card">
+      <div class="cliente-info">
+       <h4 class="text-aura">@ViewBag.ClienteTopComprador.Cliente.Nombre</h4>
+    <p class="mb-1"><i class="bi bi-envelope"></i> @ViewBag.ClienteTopComprador.Cliente.Email</p>
+            <p class="mb-0"><i class="bi bi-telephone"></i> @ViewBag.ClienteTopComprador.Cliente.Telefono</p>
+     </div>
+          <div class="cliente-amount">
+<div class="amount-badge">
+      <span class="amount-label">Total Compras</span>
+     <span class="amount-value">@ViewBag.ClienteTopComprador.TotalCompras</span>
+     </div>
+       <a asp-action="DetalleCliente" asp-route-id="@ViewBag.ClienteTopComprador.Cliente.ClienteId" 
+          class="btn btn-aura btn-sm mt-2">
+       <i class="bi bi-eye"></i> Ver Historial
+      </a>
+     </div>
+     </div>
+        }
+   else
+   {
+          <p class="text-muted">No hay datos disponibles</p>
+   }
+  </div>
+  </div>
+</div>
+    </div>
+
+ <!-- Producto Más Vendido -->
+    @if (ViewBag.ProductoMasVendido != null)
+    {
+   <div class="row mb-4">
+       <div class="col-md-12">
+   <div class="card bg-dark text-light border-aura">
+   <div class="card-header">
+         <h5 class="mb-0"><i class="bi bi-box-seam-fill text-success"></i> Producto Más Vendido</h5>
+   </div>
+      <div class="card-body">
+    <div class="row align-items-center">
+         <div class="col-md-8">
+       <h3 class="text-aura">@ViewBag.ProductoMasVendido.Nombre</h3>
+<p class="text-muted mb-0">Este producto ha sido el favorito de nuestros clientes</p>
+    </div>
+   <div class="col-md-4 text-end">
+      <div class="product-stat">
+       <span class="stat-label">Cantidad Vendida</span>
+       <span class="stat-value text-success">@ViewBag.ProductoMasVendido.CantidadVendida unidades</span>
+     </div>
+    </div>
+      </div>
+   </div>
+     </div>
+        </div>
+  </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+    .border-aura {
+      border: 2px solid #00bcd4;
+  }
+
+   .stat-card {
+ padding: 1.5rem;
+      border-radius: 12px;
+         color: white;
+    display: flex;
+       align-items: center;
+            gap: 1rem;
+        }
+
+ .stat-icon {
+     font-size: 3rem;
+   opacity: 0.8;
+ }
+
+        .stat-content h4 {
+       margin: 0;
+    font-size: 2.5rem;
+            font-weight: 800;
+  }
+
+        .stat-content p {
+     margin: 0;
+      font-size: 1rem;
+    opacity: 0.9;
+     }
+
+      .stat-content small {
+    font-size: 0.8rem;
+     opacity: 0.7;
+        }
+
+        .top-cliente-card {
+   background-color: rgba(30, 30, 47, 0.5);
+        padding: 1.5rem;
+       border-radius: 12px;
+     display: flex;
+            justify-content: space-between;
+       align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+   .cliente-info h4 {
+            margin-bottom: 0.5rem;
+        }
+
+  .cliente-amount {
+       text-align: right;
+        }
+
+        .amount-badge {
+     background-color: #1e1e2f;
+         padding: 1rem;
+   border-radius: 8px;
+display: flex;
+   flex-direction: column;
+         gap: 0.5rem;
+   }
+
+   .amount-label {
+   font-size: 0.8rem;
+            color: #999;
+    }
+
+ .amount-value {
+ font-size: 1.8rem;
+            font-weight: 800;
+   color: #00bcd4;
+      }
+
+.product-stat {
+     display: flex;
+    flex-direction: column;
+            gap: 0.5rem;
+   }
+
+        .product-stat .stat-label {
+  font-size: 0.9rem;
+     color: #999;
+        }
+
+  .product-stat .stat-value {
+   font-size: 2rem;
+   font-weight: 800;
+ }
+
+   .text-aura {
+     color: #00bcd4;
+  }
+
+  .btn-aura {
+       background-color: #00bcd4;
+     color: #121212;
+ border: none;
+            font-weight: 600;
+}
+
+   .btn-aura:hover {
+   background-color: #00acc1;
+      color: #fff;
+ }
+    </style>
+}

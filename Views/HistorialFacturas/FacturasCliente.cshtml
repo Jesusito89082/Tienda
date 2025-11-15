@@ -1,0 +1,137 @@
+@model IEnumerable<Tienda.Models.Factura>
+
+@{
+    ViewData["Title"] = $"Facturas de {ViewBag.Cliente.Nombre}";
+    var cliente = ViewBag.Cliente as Tienda.Models.Cliente;
+}
+
+<div class="container my-5">
+    <div class="row mb-4">
+   <div class="col-md-12">
+       <div class="d-flex justify-content-between align-items-center">
+          <div>
+    <h2 class="text-light fw-bold">
+ <i class="bi bi-file-earmark-text"></i> Facturas de @cliente.Nombre
+       </h2>
+       <p class="text-muted">Total Facturado: <span class="text-success fw-bold">@ViewBag.TotalFacturado.ToString("?#,##0.00")</span></p>
+        </div>
+   <div>
+   <a asp-action="DetalleCliente" asp-route-id="@cliente.ClienteId" class="btn btn-outline-light">
+       <i class="bi bi-arrow-left"></i> Volver al Historial
+      </a>
+    </div>
+       </div>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+     <div class="alert alert-dark text-center">
+      <i class="bi bi-inbox fs-3"></i>
+   <p class="mb-0 mt-2">Este cliente no tiene facturas generadas.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+         @foreach (var factura in Model)
+            {
+  <div class="col-md-6 col-lg-4">
+      <div class="card factura-card">
+        <div class="card-header">
+  <div class="d-flex justify-content-between align-items-center">
+  <span class="badge bg-aura">Factura #@factura.FacturaId</span>
+       @if (factura.Estado?.ToUpper() == "APROBADA")
+          {
+    <span class="badge bg-success">Aprobada</span>
+       }
+     else if (factura.Estado?.ToUpper() == "RECHAZADA")
+      {
+    <span class="badge bg-danger">Rechazada</span>
+     }
+     else
+         {
+        <span class="badge bg-warning text-dark">Pendiente</span>
+    }
+     </div>
+      </div>
+         <div class="card-body">
+     <p class="mb-2">
+    <i class="bi bi-calendar"></i> 
+     <strong>Fecha:</strong> @factura.FechaEmision.ToString("dd/MM/yyyy HH:mm")
+         </p>
+        <p class="mb-2">
+<i class="bi bi-receipt"></i> 
+    <strong>Consecutivo:</strong><br/>
+      <small class="text-muted">@factura.NumeroConsecutivo</small>
+  </p>
+     <p class="mb-3">
+            <i class="bi bi-key"></i> 
+  <strong>Clave:</strong><br/>
+  <small class="text-muted">@factura.Clave</small>
+        </p>
+
+        <div class="alert alert-success mb-3">
+   <i class="bi bi-cash-stack"></i> 
+      <strong>Monto:</strong>
+    <span class="fs-5">@factura.Venta?.Total?.ToString("?#,##0.00")</span>
+       </div>
+
+    <div class="d-grid gap-2">
+     <a asp-controller="Facturas" asp-action="Details" asp-route-id="@factura.FacturaId" 
+       class="btn btn-outline-info btn-sm">
+       <i class="bi bi-eye"></i> Ver Detalles
+   </a>
+    @if (!string.IsNullOrEmpty(factura.PdfPath))
+         {
+ <a asp-controller="Facturas" asp-action="VerPdf" asp-route-id="@factura.FacturaId" 
+     class="btn btn-outline-danger btn-sm" target="_blank">
+     <i class="bi bi-file-pdf"></i> Ver PDF
+    </a>
+       }
+     @if (!string.IsNullOrEmpty(factura.XmlFirmado))
+      {
+   <a asp-controller="Facturas" asp-action="DescargarXml" asp-route-id="@factura.FacturaId" 
+     class="btn btn-outline-warning btn-sm">
+         <i class="bi bi-file-code"></i> Descargar XML
+         </a>
+       }
+    </div>
+    </div>
+   </div>
+   </div>
+   }
+     </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+  .factura-card {
+  background-color: #2a2a3e;
+     border: 1px solid rgba(0, 188, 212, 0.3);
+       border-radius: 12px;
+       transition: transform 0.3s ease, box-shadow 0.3s ease;
+ }
+
+        .factura-card:hover {
+     transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4);
+        }
+
+ .factura-card .card-header {
+       background-color: #1e1e2f;
+   border-bottom: 1px solid rgba(0, 188, 212, 0.3);
+   color: white;
+ }
+
+        .factura-card .card-body {
+    color: #f1f1f1;
+  }
+
+.bg-aura {
+     background-color: #00bcd4;
+  color: #121212;
+  }
+    </style>
+}

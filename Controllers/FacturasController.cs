@@ -14,7 +14,7 @@ using Tienda.Services;
 
 namespace Tienda.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR")]
+    [Authorize(Roles = "ADMINISTRADOR,CAJERO")]
     public class FacturasController : Controller
     {
         private readonly ApplicationDbContext _context;

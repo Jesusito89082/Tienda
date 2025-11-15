@@ -41,14 +41,14 @@
      <div class="container">
     <h2 class="text-center text-light mb-5">Módulos Administrativos</h2>
      <div class="row g-4">
-             <div class="col-md-4">
-     <div class="card aura-mod-card text-center">
+     <div class="col-md-4">
+  <div class="card aura-mod-card text-center">
         <div class="card-body">
      <i class="bi bi-tags fs-1 text-aura"></i>
       <h5 class="card-title mt-3">Categorías</h5>
     <p class="card-text">Administra las categorías de productos.</p>
-        <a asp-controller="Categorias" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-         </div>
+<a asp-controller="Categorias" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+    </div>
         </div>
      </div>
 <div class="col-md-4">
@@ -58,7 +58,7 @@
         <h5 class="card-title mt-3">Clientes</h5>
         <p class="card-text">Gestiona la información de tus clientes.</p>
     <a asp-controller="Clientes" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
-       </div>
+     </div>
   </div>
   </div>
    <div class="col-md-4">
@@ -66,15 +66,15 @@
        <div class="card-body">
       <i class="bi bi-box-seam fs-1 text-aura"></i>
      <h5 class="card-title mt-3">Productos</h5>
-      <p class="card-text">Controla tu inventario de productos.</p>
-        <a asp-controller="Productoes" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+    <p class="card-text">Controla tu inventario de productos.</p>
+   <a asp-controller="Productoes" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
           </div>
-        </div>
+   </div>
     </div>
        <div class="col-md-4">
         <div class="card aura-mod-card text-center">
-                <div class="card-body">
-              <i class="bi bi-cart-check fs-1 text-aura"></i>
+   <div class="card-body">
+    <i class="bi bi-cart-check fs-1 text-aura"></i>
      <h5 class="card-title mt-3">Ventas</h5>
   <p class="card-text">Consulta y registra tus ventas.</p>
      <a asp-controller="Ventas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
@@ -91,9 +91,60 @@
     </div>
 </div>
       </div>
+        <div class="col-md-4">
+          <div class="card aura-mod-card text-center">
+       <div class="card-body">
+       <i class="bi bi-file-earmark-text fs-1 text-aura"></i>
+      <h5 class="card-title mt-3">Facturas</h5>
+    <p class="card-text">Genera y gestiona facturas.</p>
+       <a asp-controller="Facturas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+              </div>
+      </div>
+        </div>
     </div>
    </div>
         </section>
+    }
+    else if (User.Identity?.IsAuthenticated == true && User.IsInRole("CAJERO"))
+    {
+ <!-- Módulos para CAJERO -->
+        <section class="modulos py-5">
+         <div class="container">
+   <h2 class="text-center text-light mb-5">Panel de Cajero</h2>
+                <div class="row g-4 justify-content-center">
+  <div class="col-md-4">
+     <div class="card aura-mod-card text-center">
+     <div class="card-body">
+   <i class="bi bi-cart-check fs-1 text-aura"></i>
+       <h5 class="card-title mt-3">Ventas</h5>
+     <p class="card-text">Consulta y registra ventas.</p>
+    <a asp-controller="Ventas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+              </div>
+      </div>
+       </div>
+         <div class="col-md-4">
+       <div class="card aura-mod-card text-center">
+         <div class="card-body">
+          <i class="bi bi-receipt fs-1 text-aura"></i>
+        <h5 class="card-title mt-3">Detalles de Ventas</h5>
+       <p class="card-text">Revisa detalles de ventas.</p>
+     <a asp-controller="DetallesVentums" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+      </div>
+        </div>
+      </div>
+        <div class="col-md-4">
+          <div class="card aura-mod-card text-center">
+      <div class="card-body">
+        <i class="bi bi-file-earmark-text fs-1 text-aura"></i>
+    <h5 class="card-title mt-3">Facturas</h5>
+    <p class="card-text">Genera facturas electrónicas.</p>
+   <a asp-controller="Facturas" asp-action="Index" class="btn btn-outline-aura btn-sm">Gestionar</a>
+          </div>
+             </div>
+ </div>
+          </div>
+    </div>
+   </section>
     }
     else
     {

@@ -12,7 +12,7 @@ using Tienda.Services;
 
 namespace Tienda.Controllers
 {
-    [Authorize(Roles = "ADMINISTRADOR")]
+    [Authorize(Roles = "ADMINISTRADOR,CAJERO")]
     public class VentasController : Controller
     {
         private readonly ApplicationDbContext _context;
