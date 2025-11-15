@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Tienda.Services;
 
 namespace Tienda.Controllers
 {
+    [Authorize(Roles = "ADMINISTRADOR")]
     public class VentasController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -32,7 +34,8 @@ namespace Tienda.Controllers
             return View(ventas);
         }
 
-        // GET: Ventas/Details/5
+        // GET: Ventas/Details/5 - Permitir ver detalles después de comprar
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -143,10 +146,17 @@ namespace Tienda.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Finalizar venta con detalles (desde carrito)
+        // POST: Finalizar venta con detalles (desde carrito) - PÚBLICO
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> FinalizarVenta(int clienteId, List<CarritoItem> carrito)
+        [AllowAnonymous]
+        public async Task<IActionResult> FinalizarVenta(
+            int? clienteId,
+            List<CarritoItem> carrito,
+            string? nuevoNombre,
+            string? nuevoEmail,
+            string? nuevoTelefono,
+            string? nuevaDireccion)
         {
             if (carrito == null || !carrito.Any())
             {
@@ -154,13 +164,43 @@ namespace Tienda.Controllers
                 return RedirectToAction("Index", "Carrito");
             }
 
-            // Validar cliente
-            var clienteExiste = await _context.Clientes.AsNoTracking()
-                .AnyAsync(c => c.ClienteId == clienteId);
-            if (!clienteExiste)
+            // Si no se seleccionó cliente existente, crear uno nuevo
+            int ventaClienteId;
+
+            if (clienteId.HasValue && clienteId.Value > 0)
             {
-                TempData["Error"] = "El cliente indicado no existe.";
-                return RedirectToAction("Index", "Carrito");
+                // Validar cliente existente
+                var clienteExiste = await _context.Clientes.AsNoTracking()
+                    .AnyAsync(c => c.ClienteId == clienteId.Value);
+                if (!clienteExiste)
+                {
+                    TempData["Error"] = "El cliente seleccionado no existe.";
+                    return RedirectToAction("Checkout", "Carrito");
+                }
+                ventaClienteId = clienteId.Value;
+            }
+            else
+            {
+                // Crear nuevo cliente
+                if (string.IsNullOrWhiteSpace(nuevoNombre))
+                {
+                    TempData["Error"] = "Debes proporcionar tu nombre para continuar.";
+                    return RedirectToAction("Checkout", "Carrito");
+                }
+
+                var nuevoCliente = new Cliente
+                {
+                    Nombre = nuevoNombre.Trim(),
+                    Email = string.IsNullOrWhiteSpace(nuevoEmail) ? null : nuevoEmail.Trim(),
+                    Telefono = string.IsNullOrWhiteSpace(nuevoTelefono) ? null : nuevoTelefono.Trim(),
+                    Direccion = string.IsNullOrWhiteSpace(nuevaDireccion) ? null : nuevaDireccion.Trim()
+                };
+
+                _context.Clientes.Add(nuevoCliente);
+                await _context.SaveChangesAsync();
+
+                ventaClienteId = nuevoCliente.ClienteId;
+                TempData["Info"] = $"Perfil de cliente creado exitosamente para {nuevoNombre}";
             }
 
             // Normaliza y valida items
@@ -200,7 +240,7 @@ namespace Tienda.Controllers
             {
                 var venta = new Venta
                 {
-                    ClienteId = clienteId,
+                    ClienteId = ventaClienteId,
                     Fecha = DateTime.Now,
                     Total = total
                 };
@@ -227,6 +267,11 @@ namespace Tienda.Controllers
                 await _context.SaveChangesAsync();
 
                 await tx.CommitAsync();
+
+                // Limpiar el carrito después de finalizar la venta
+                HttpContext.Session.Remove("Carrito");
+
+                TempData["Mensaje"] = "¡Compra realizada exitosamente! Gracias por tu preferencia.";
                 return RedirectToAction("Details", new { id = venta.VentaId });
             }
             catch (Exception ex)

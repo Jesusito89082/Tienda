@@ -1,59 +1,142 @@
 ﻿@model Tienda.Models.Producto
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Producto";
 }
 
-<h1>Edit</h1>
+<div class="container my-5">
+    <h2 class="text-light fw-bold mb-4">
+  <i class="bi bi-pencil-square"></i> Editar Producto
+    </h2>
 
-<h4>Producto</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProductoId" />
-            <div class="form-group">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Talla" class="control-label"></label>
-                <input asp-for="Talla" class="form-control" />
-                <span asp-validation-for="Talla" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Color" class="control-label"></label>
-                <input asp-for="Color" class="form-control" />
-                <span asp-validation-for="Color" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoriaId" class="control-label"></label>
-                <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId"></select>
-                <span asp-validation-for="CategoriaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="row">
+      <div class="col-md-8">
+            <div class="aura-card">
+                <form asp-action="Edit" enctype="multipart/form-data" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    <input type="hidden" asp-for="ProductoId" />
+     <input type="hidden" asp-for="ImagenUrl" />
+      
+    <div class="row">
+   <div class="col-md-6 mb-3">
+          <label asp-for="Nombre" class="form-label text-light">
+            <i class="bi bi-tag"></i> Nombre del Producto
+     </label>
+<input asp-for="Nombre" class="form-control" />
+          <span asp-validation-for="Nombre" class="text-danger"></span>
+  </div>
+
+       <div class="col-md-6 mb-3">
+         <label asp-for="CategoriaId" class="form-label text-light">
+    <i class="bi bi-folder"></i> Categoría
+         </label>
+        <select asp-for="CategoriaId" class="form-control" asp-items="ViewBag.CategoriaId">
+ <option value="">-- Seleccione una categoría --</option>
+       </select>
+       <span asp-validation-for="CategoriaId" class="text-danger"></span>
+   </div>
+        </div>
+
+           <div class="row">
+   <div class="col-md-4 mb-3">
+       <label asp-for="Color" class="form-label text-light">
+      <i class="bi bi-palette"></i> Color
+           </label>
+           <input asp-for="Color" class="form-control" />
+        <span asp-validation-for="Color" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="col-md-4 mb-3">
+            <label asp-for="Talla" class="form-label text-light">
+     <i class="bi bi-rulers"></i> Talla
+    </label>
+      <input asp-for="Talla" class="form-control" />
+           <span asp-validation-for="Talla" class="text-danger"></span>
+            </div>
+
+           <div class="col-md-4 mb-3">
+         <label asp-for="Stock" class="form-label text-light">
+      <i class="bi bi-box"></i> Stock
+             </label>
+        <input asp-for="Stock" class="form-control" type="number" min="0" />
+        <span asp-validation-for="Stock" class="text-danger"></span>
+          </div>
+        </div>
+
+     <div class="mb-3">
+          <label asp-for="Precio" class="form-label text-light">
+     <i class="bi bi-currency-dollar"></i> Precio
+         </label>
+                <input asp-for="Precio" class="form-control" type="number" step="0.01" min="0" />
+            <span asp-validation-for="Precio" class="text-danger"></span>
+        </div>
+
+         @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+        {
+  <div class="mb-3">
+            <label class="form-label text-light">Imagen Actual</label>
+           <div>
+           <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-thumbnail" style="max-width: 300px; border-radius: 12px;" />
+     </div>
+              </div>
+ }
+
+         <div class="mb-3">
+    <label asp-for="ImagenArchivo" class="form-label text-light">
+        <i class="bi bi-image"></i> @(string.IsNullOrEmpty(Model.ImagenUrl) ? "Imagen del Producto" : "Cambiar Imagen")
+          </label>
+     <input asp-for="ImagenArchivo" class="form-control" type="file" accept="image/*" id="imagenInput" />
+  <span asp-validation-for="ImagenArchivo" class="text-danger"></span>
+    <small class="form-text text-muted">Dejar vacío si no desea cambiar la imagen</small>
+    </div>
+
+        <div class="mb-4">
+  <img id="imagenPreview" src="#" alt="Vista previa" style="max-width: 100%; max-height: 300px; display: none; border-radius: 12px;" class="img-thumbnail" />
+    </div>
+
+        <div class="d-flex gap-2">
+         <button type="submit" class="btn btn-aura">
+          <i class="bi bi-save"></i> Guardar Cambios
+                </button>
+          <a asp-action="Index" class="btn btn-outline-secondary">
+      <i class="bi bi-x-circle"></i> Cancelar
+   </a>
+         </div>
+        </form>
+            </div>
+     </div>
+
+        <div class="col-md-4">
+   <div class="aura-card">
+  <h5 class="text-aura mb-3">
+        <i class="bi bi-info-circle"></i> Información
+                </h5>
+   <ul class="text-light" style="font-size: 0.9rem; line-height: 1.8;">
+     <li><strong>SKU:</strong> PR-@Model.ProductoId.ToString("D6")</li>
+          <li>Solo sube una nueva imagen si deseas cambiarla</li>
+                 <li>La imagen anterior se eliminará automáticamente</li>
+</ul>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Vista previa de la nueva imagen
+        document.getElementById('imagenInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+  const reader = new FileReader();
+                reader.onload = function(e) {
+         const preview = document.getElementById('imagenPreview');
+            preview.src = e.target.result;
+   preview.style.display = 'block';
+           }
+      reader.readAsDataURL(file);
+            }
+  });
+    </script>
 }

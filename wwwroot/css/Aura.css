@@ -7,6 +7,33 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* ===== LOGO STYLES ===== */
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    border-radius: 8px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
+}
+
+.navbar-logo:hover {
+    transform: scale(1.05);
+}
+
+.hero-logo {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 188, 212, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-logo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(0, 188, 212, 0.5);
+}
+
 /* ===== TARJETAS AURA ===== */
 .aura-card {
     background-color: #1e1e2f;
@@ -143,4 +170,104 @@ footer.bg-aura-dark {
     to {
         opacity: 0;
     }
+}
+
+/* ===== BOTÓN AGREGAR AL CARRITO ===== */
+.btn-add-to-cart {
+    background: linear-gradient(135deg, #00bcd4 0%, #00acc1 100%);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+}
+
+.btn-add-to-cart:hover:not(:disabled) {
+  background: linear-gradient(135deg, #00acc1 0%, #0097a7 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 188, 212, 0.5);
+    color: #fff;
+}
+
+.btn-add-to-cart:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 188, 212, 0.3);
+}
+
+.btn-add-to-cart:disabled {
+    background: #555;
+    opacity: 0.6;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-add-to-cart i {
+    margin-right: 0.4rem;
+}
+
+.btn-success-temp {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%) !important;
+}
+
+/* ===== NOTIFICACIONES TOAST ===== */
+.toast-notification {
+    position: fixed;
+top: 20px;
+    right: 20px;
+    background-color: #1e1e2f;
+    color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+ box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+}
+
+.toast-notification.show {
+    opacity: 1;
+ transform: translateX(0);
+}
+
+.toast-notification i {
+    font-size: 1.5rem;
+}
+
+.toast-success {
+    border-left: 4px solid #4caf50;
+}
+
+.toast-success i {
+    color: #4caf50;
+}
+
+.toast-error {
+    border-left: 4px solid #ff5252;
+}
+
+.toast-error i {
+    color: #ff5252;
+}
+
+/* ===== CONTADOR DEL CARRITO ===== */
+#cart-counter {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ff5252;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
 }
