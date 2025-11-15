@@ -37,7 +37,7 @@
 
                         @if (User.Identity?.IsAuthenticated == true && User.IsInRole("ADMINISTRADOR"))
                         {
-                            <!-- Menú completo para ADMINISTRADOR -->
+                            <!-- Menú COMPLETO para ADMINISTRADOR -->
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-controller="Categorias" asp-action="Index">
                                     <i class="bi bi-tags"></i> Categorías
@@ -60,12 +60,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-controller="DetallesVentums" asp-action="Index">
-                                    <i class="bi bi-receipt"></i> Detalles
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Facturas" asp-action="Index">
-                                    <i class="bi bi-file-earmark-text"></i> Facturas
+                                    <i class="bi bi-receipt"></i> Detalles de Venta
                                 </a>
                             </li>
                         }
@@ -78,14 +73,6 @@
                                 </a>
                             </li>
                         }
-
-                        <!-- Carrito visible para todos -->
-                        <li class="nav-item">
-                            <a class="nav-link text-light position-relative" asp-controller="Carrito" asp-action="Index">
-                                <i class="bi bi-cart3"></i> Carrito
-                                <span id="cart-counter" style="display:none;">0</span>
-                            </a>
-                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
