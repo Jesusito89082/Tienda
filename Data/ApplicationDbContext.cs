@@ -12,6 +12,8 @@ namespace Tienda.Data
         }
 
         public DbSet<Categoria> Categorias { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<DetallesVentum> DetallesVenta { get; set; }
         public DbSet<Producto> Productos { get; set; }

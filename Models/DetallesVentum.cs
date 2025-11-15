@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Tienda.Models;
 
@@ -18,4 +19,6 @@ public partial class DetallesVentum
     public virtual Producto? Producto { get; set; }
 
     public virtual Venta? Venta { get; set; }
+    [NotMapped]
+    public decimal Subtotal => Cantidad * PrecioUnitario;
 }
