@@ -1,54 +1,111 @@
 ﻿@model Tienda.Models.Producto
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalle del producto";
 }
 
-<h1>Details</h1>
+<div class="container my-5">
 
-<div>
-    <h4>Producto</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Talla)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Talla)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Stock)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Stock)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Categoria)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Categoria.CategoriaId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ProductoId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <!-- Título / Header -->
+    <section class="text-center mb-4">
+        <h1 class="display-5 fw-bold text-aura">Detalle del producto</h1>
+        <p class="text-muted">Revisa la información del producto y comparte tu opinión.</p>
+    </section>
+
+    <div class="row g-4">
+
+        <!-- Card de información del producto -->
+        <div class="col-lg-6">
+            <div class="p-4 rounded shadow aura-dark-card text-light">
+                <h4 class="fw-bold mb-3">Información del producto</h4>
+                <hr class="border-secondary" />
+
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Nombre</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Nombre)</dd>
+
+                    <dt class="col-sm-4">Talla</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Talla)</dd>
+
+                    <dt class="col-sm-4">Color</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Color)</dd>
+
+                    <dt class="col-sm-4">Precio</dt>
+                    <dd class="col-sm-8">
+                        ₡@Html.DisplayFor(model => model.Precio)
+                    </dd>
+
+                    <dt class="col-sm-4">Stock</dt>
+                    <dd class="col-sm-8">@Html.DisplayFor(model => model.Stock)</dd>
+
+                    <dt class="col-sm-4">Categoría</dt>
+                    <dd class="col-sm-8">
+                        @Html.DisplayFor(model => model.Categoria.Nombre)
+                    </dd>
+                </dl>
+
+                <div class="mt-4">
+                    <a asp-action="Edit" asp-route-id="@Model?.ProductoId" class="btn btn-outline-light btn-sm me-2">
+                        Editar
+                    </a>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        Volver a la lista
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna de comentarios -->
+        <div class="col-lg-6">
+
+            <!-- Card: agregar comentario -->
+            <div class="p-4 rounded shadow aura-dark-card text-light mb-4">
+                <h4 class="fw-bold mb-3 text-aura">Agregar comentario</h4>
+                <p class="text-muted mb-3">Cuéntanos qué te pareció este producto.</p>
+
+                <form asp-controller="Comments" asp-action="Crear" method="post">
+                    <input type="hidden" name="productoId" value="@Model.ProductoId" />
+
+                    <div class="mb-3">
+                        <label for="texto" class="form-label">Comentario</label>
+                        <textarea id="texto"
+                                  name="texto"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Escribe tu comentario aquí..."
+                                  required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        Enviar comentario
+                    </button>
+                </form>
+            </div>
+
+            <!-- Card: lista de comentarios -->
+            <div class="p-4 rounded shadow aura-dark-card text-light">
+                <h4 class="fw-bold mb-3">Comentarios</h4>
+
+                @if (Model.Comentarios != null && Model.Comentarios.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var c in Model.Comentarios.OrderByDescending(x => x.Fecha))
+                        {
+                            <div class="list-group-item bg-transparent border-secondary text-light mb-2 rounded-3">
+                                <p class="mb-1">@c.Texto</p>
+                                <small class="text-muted">
+                                    @c.Fecha.ToString("dd/MM/yyyy HH:mm")
+                                </small>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">Aún no hay comentarios para este producto. Sé el primero en opinar.</p>
+                }
+            </div>
+
+        </div>
+    </div>
 </div>

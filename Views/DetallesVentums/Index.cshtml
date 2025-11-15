@@ -26,39 +26,56 @@
     else
     {
         <div class="row g-4">
+
             @foreach (var item in Model)
             {
-                var precioUnitarioTxt = string.Format(cultura, "{0:C}", item?.PrecioUnitario ?? 0m);
+                var precioUnitarioTxt = string.Format(cultura, "{0:C}", item.PrecioUnitario);
+                var subtotal = item.Cantidad * item.PrecioUnitario;
+                var subtotalTxt = string.Format(cultura, "{0:C}", subtotal);
 
                 <div class="col-md-6 col-lg-4">
                     <div class="card aura-mod-card text-center">
                         <div class="card-body">
+
                             <h5 class="mb-2">
-                                <i class="bi bi-box-seam"></i> @(item?.Producto?.Nombre ?? "Producto")
+                                <i class="bi bi-box-seam"></i> @(item.Producto?.Nombre ?? "Producto sin nombre")
                             </h5>
-                            <p class="mb-1"><strong>Cantidad:</strong> @item?.Cantidad</p>
+
+                            <p class="mb-1"><strong>Cantidad:</strong> @item.Cantidad</p>
                             <p class="mb-1"><strong>Precio Unitario:</strong> @precioUnitarioTxt</p>
-                            <p class="mb-1"><strong>Venta ID:</strong> @item?.VentaId</p>
+                            <p class="mb-1"><strong>Subtotal:</strong> @subtotalTxt</p>
+                            <p class="mb-1"><strong>Venta ID:</strong> @item.VentaId</p>
 
                             <div class="mt-3">
-                                <!-- ✅ POST real a /Facturas/Generar -->
+
+                                <!-- FACTURAR -->
                                 <form asp-action="Generar"
                                       asp-controller="Facturas"
                                       method="post"
                                       class="d-inline">
                                     @Html.AntiForgeryToken()
-                                    <input type="hidden" name="ventaId" value="@item?.VentaId" />
+                                    <input type="hidden" name="ventaId" value="@item.VentaId" />
                                     <button type="submit" class="btn btn-sm btn-aura">
                                         <i class="bi bi-file-earmark-pdf"></i> Facturar Venta
                                     </button>
                                 </form>
 
+                                <!-- VER DETALLE -->
                                 <a asp-action="Details"
-                                   asp-route-id="@item?.DetalleId"
+                                   asp-route-id="@item.DetalleId"
                                    class="btn btn-sm btn-outline-aura ms-2">
                                     <i class="bi bi-eye"></i> Ver Detalle
                                 </a>
+
+                                <!-- ELIMINAR DETALLE -->
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.DetalleId"
+                                   class="btn btn-sm btn-danger ms-2">
+                                    <i class="bi bi-trash"></i> Eliminar
+                                </a>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
