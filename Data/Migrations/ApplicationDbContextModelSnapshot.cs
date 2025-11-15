@@ -237,7 +237,7 @@ namespace Tienda.Data.Migrations
                     b.HasKey("CategoriaId")
                         .HasName("PK__Categori__F353C1C5E1B9140C");
 
-                    b.ToTable("Categorias");
+                    b.ToTable("Categorias", (string)null);
                 });
 
             modelBuilder.Entity("Tienda.Models.Cliente", b =>
@@ -269,7 +269,7 @@ namespace Tienda.Data.Migrations
                     b.HasKey("ClienteId")
                         .HasName("PK__Clientes__71ABD0A731264900");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("Clientes", (string)null);
                 });
 
             modelBuilder.Entity("Tienda.Models.Comment", b =>
@@ -294,7 +294,7 @@ namespace Tienda.Data.Migrations
 
                     b.HasIndex("ProductoId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Tienda.Models.DetallesVentum", b =>
@@ -327,7 +327,7 @@ namespace Tienda.Data.Migrations
 
                     b.HasIndex("VentaId");
 
-                    b.ToTable("DetallesVenta");
+                    b.ToTable("DetallesVenta", (string)null);
                 });
 
             modelBuilder.Entity("Tienda.Models.Factura", b =>
@@ -359,6 +359,7 @@ namespace Tienda.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PdfPath")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -366,6 +367,7 @@ namespace Tienda.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("XmlFirmado")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FacturaId");
@@ -415,7 +417,7 @@ namespace Tienda.Data.Migrations
 
                     b.HasIndex("CategoriaId");
 
-                    b.ToTable("Productos");
+                    b.ToTable("Productos", (string)null);
                 });
 
             modelBuilder.Entity("Tienda.Models.Venta", b =>
@@ -432,7 +434,7 @@ namespace Tienda.Data.Migrations
                         .HasColumnName("ClienteID");
 
                     b.Property<decimal>("Descuento")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10, 2)");
 
                     b.Property<DateTime?>("Fecha")
                         .ValueGeneratedOnAdd()
@@ -440,10 +442,10 @@ namespace Tienda.Data.Migrations
                         .HasDefaultValueSql("(getdate())");
 
                     b.Property<decimal>("Impuesto")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10, 2)");
 
                     b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10, 2)");
 
                     b.Property<decimal?>("Total")
                         .HasColumnType("decimal(10, 2)");
@@ -453,7 +455,7 @@ namespace Tienda.Data.Migrations
 
                     b.HasIndex("ClienteId");
 
-                    b.ToTable("Ventas");
+                    b.ToTable("Ventas", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

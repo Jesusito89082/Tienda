@@ -154,10 +154,15 @@ namespace Tienda.Controllers
 
             var producto = await _context.Productos
                 .Include(p => p.Categoria)
+                .Include(p => p.DetallesVenta)
                 .FirstOrDefaultAsync(m => m.ProductoId == id);
 
             if (producto == null)
                 return NotFound();
+
+            // Verificar si tiene ventas asociadas
+            ViewBag.TieneVentas = producto.DetallesVenta.Any();
+            ViewBag.CantidadVentas = producto.DetallesVenta.Count;
 
             return View(producto);
         }
@@ -168,19 +173,32 @@ namespace Tienda.Controllers
         [Authorize(Roles = "ADMINISTRADOR")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var producto = await _context.Productos.FindAsync(id);
-            if (producto != null)
-            {
-                // Eliminar la imagen asociada si existe
-                if (!string.IsNullOrEmpty(producto.ImagenUrl))
-                {
-                    EliminarImagen(producto.ImagenUrl);
-                }
+            var producto = await _context.Productos
+                .Include(p => p.DetallesVenta)
+                .FirstOrDefaultAsync(p => p.ProductoId == id);
 
-                _context.Productos.Remove(producto);
-                await _context.SaveChangesAsync();
+            if (producto == null)
+            {
+                return NotFound();
             }
 
+            // Validar si tiene ventas asociadas
+            if (producto.DetallesVenta.Any())
+            {
+                TempData["Error"] = $"No se puede eliminar el producto '{producto.Nombre}' porque está asociado a {producto.DetallesVenta.Count} venta(s). Este producto tiene historial de ventas y no puede ser eliminado.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Eliminar la imagen asociada si existe
+            if (!string.IsNullOrEmpty(producto.ImagenUrl))
+            {
+                EliminarImagen(producto.ImagenUrl);
+            }
+
+            _context.Productos.Remove(producto);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"El producto '{producto.Nombre}' fue eliminado exitosamente.";
             return RedirectToAction(nameof(Index));
         }
 

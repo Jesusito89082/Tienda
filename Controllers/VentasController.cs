@@ -131,9 +131,18 @@ namespace Tienda.Controllers
             var venta = await _context.Ventas
                 .AsNoTracking()
                 .Include(v => v.Cliente)
+                .Include(v => v.DetallesVenta)
+                .Include(v => v.Facturas)
                 .FirstOrDefaultAsync(m => m.VentaId == id);
 
             if (venta == null) return NotFound();
+
+            // Verificar si tiene detalles o facturas
+            ViewBag.TieneDetalles = venta.DetallesVenta.Any();
+            ViewBag.CantidadDetalles = venta.DetallesVenta.Count;
+            ViewBag.TieneFacturas = venta.Facturas.Any();
+            ViewBag.CantidadFacturas = venta.Facturas.Count;
+
             return View(venta);
         }
 
@@ -142,9 +151,33 @@ namespace Tienda.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var venta = await _context.Ventas.FindAsync(id);
-            if (venta != null) _context.Ventas.Remove(venta);
+            var venta = await _context.Ventas
+                .Include(v => v.DetallesVenta)
+                .Include(v => v.Facturas)
+                .FirstOrDefaultAsync(v => v.VentaId == id);
+
+            if (venta == null)
+            {
+                return NotFound();
+            }
+
+            // Validar si tiene detalles o facturas
+            if (venta.DetallesVenta.Any())
+            {
+                TempData["Error"] = $"No se puede eliminar la venta #{venta.VentaId} porque tiene {venta.DetallesVenta.Count} detalle(s) asociado(s). Las ventas con productos registrados no pueden ser eliminadas para preservar el historial.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (venta.Facturas.Any())
+            {
+                TempData["Error"] = $"No se puede eliminar la venta #{venta.VentaId} porque tiene {venta.Facturas.Count} factura(s) generada(s). Las ventas facturadas no pueden ser eliminadas.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Ventas.Remove(venta);
             await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"La venta #{venta.VentaId} fue eliminada exitosamente.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -19,8 +19,14 @@ namespace Tienda.Controllers
 
         // GET: Categorias - Vista pública con productos
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
+            // Si se especifica un ID de categoría, mostrar solo esa categoría
+            if (id.HasValue)
+            {
+                return await VerCategoria(id.Value);
+            }
+
             // Si es admin, mostrar vista de gestión
             if (User.Identity?.IsAuthenticated == true && User.IsInRole("ADMINISTRADOR"))
             {
@@ -34,6 +40,23 @@ namespace Tienda.Controllers
                 .ToListAsync();
 
             return View("PublicIndex", categorias);
+        }
+
+        // GET: Categorias/Ver/5 - Vista pública de una categoría con sus productos
+        [AllowAnonymous]
+        [Route("Categorias/Ver/{id}")]
+        public async Task<IActionResult> VerCategoria(int id)
+        {
+            var categoria = await _context.Categorias
+                .Include(c => c.Productos)
+                .FirstOrDefaultAsync(c => c.CategoriaId == id);
+
+            if (categoria == null)
+            {
+                return NotFound();
+            }
+
+            return View("VerCategoria", categoria);
         }
 
         // GET: Categorias/Details/5
@@ -130,6 +153,7 @@ namespace Tienda.Controllers
         }
 
         // GET: Categorias/Delete/5
+        [Authorize(Roles = "ADMINISTRADOR")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -138,11 +162,17 @@ namespace Tienda.Controllers
             }
 
             var categoria = await _context.Categorias
+                .Include(c => c.Productos)
                 .FirstOrDefaultAsync(m => m.CategoriaId == id);
+
             if (categoria == null)
             {
                 return NotFound();
             }
+
+            // Verificar si tiene productos asociados
+            ViewBag.TieneProductos = categoria.Productos.Any();
+            ViewBag.CantidadProductos = categoria.Productos.Count;
 
             return View(categoria);
         }
@@ -150,15 +180,29 @@ namespace Tienda.Controllers
         // POST: Categorias/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "ADMINISTRADOR")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var categoria = await _context.Categorias.FindAsync(id);
-            if (categoria != null)
+            var categoria = await _context.Categorias
+                .Include(c => c.Productos)
+                .FirstOrDefaultAsync(c => c.CategoriaId == id);
+
+            if (categoria == null)
             {
-                _context.Categorias.Remove(categoria);
+                return NotFound();
             }
 
+            // Validar si tiene productos asociados
+            if (categoria.Productos.Any())
+            {
+                TempData["Error"] = $"No se puede eliminar la categoría '{categoria.Nombre}' porque tiene {categoria.Productos.Count} producto(s) asociado(s). Elimine o reasigne los productos primero.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Categorias.Remove(categoria);
             await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"La categoría '{categoria.Nombre}' fue eliminada exitosamente.";
             return RedirectToAction(nameof(Index));
         }
 

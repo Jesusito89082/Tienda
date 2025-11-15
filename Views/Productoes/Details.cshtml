@@ -45,9 +45,13 @@
                 </dl>
 
                 <div class="mt-4">
-                    <a asp-action="Edit" asp-route-id="@Model?.ProductoId" class="btn btn-outline-light btn-sm me-2">
-                        Editar
-                    </a>
+                    @* Solo mostrar botón Editar si NO es cajero *@
+                    @if (User.Identity?.IsAuthenticated == true && !User.IsInRole("CAJERO"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model?.ProductoId" class="btn btn-outline-light btn-sm me-2">
+                            Editar
+                        </a>
+                    }
                     <a asp-action="Index" class="btn btn-outline-secondary btn-sm">
                         Volver a la lista
                     </a>
@@ -55,7 +59,9 @@
             </div>
         </div>
 
-        <!-- Columna de comentarios -->
+        <!-- Columna de comentarios - Solo visible si NO es CAJERO -->
+        @if (User.Identity?.IsAuthenticated != true || !User.IsInRole("CAJERO"))
+        {
         <div class="col-lg-6">
 
             <!-- Card: agregar comentario -->
@@ -102,10 +108,10 @@
                 }
                 else
                 {
-                    <p class="text-muted mb-0">Aún no hay comentarios para este producto. Sé el primero en opinar.</p>
+                    <p class="text-muted">Aún no hay comentarios para este producto. Sé el primero en opinar.</p>
                 }
             </div>
-
         </div>
+        }
     </div>
 </div>

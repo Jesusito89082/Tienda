@@ -1,57 +1,146 @@
 ﻿@model Tienda.Models.Producto
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Eliminar Producto";
+    var tieneVentas = ViewBag.TieneVentas ?? false;
+    var cantidadVentas = ViewBag.CantidadVentas ?? 0;
 }
 
-<h1>Delete</h1>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card aura-dark-card">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">
+     <i class="bi bi-exclamation-triangle"></i> Eliminar Producto
+      </h3>
+                </div>
+        <div class="card-body">
+      <h5 class="text-light mb-4">¿Está seguro que desea eliminar este producto?</h5>
+      
+          @if (tieneVentas)
+        {
+               <div class="alert alert-danger">
+      <i class="bi bi-x-circle-fill"></i>
+            <strong>¡Atención!</strong> Este producto está asociado a <strong>@cantidadVentas venta(s)</strong>.
+           <br/>
+        <strong>No se puede eliminar un producto con historial de ventas.</strong>
+     <br/>
+     Los productos con ventas registradas deben mantenerse en el sistema para preservar el historial.
+         </div>
+         }
+         else
+{
+         <div class="alert alert-warning">
+        <i class="bi bi-info-circle"></i>
+                  Esta acción no se puede deshacer. El producto y su imagen serán eliminados permanentemente.
+     </div>
+              }
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Producto</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Talla)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Talla)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Color)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Color)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Precio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Stock)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Stock)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Categoria)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Categoria.CategoriaId)
-        </dd>
-    </dl>
+        <div class="row">
+ <div class="col-md-4">
+               @if (!string.IsNullOrEmpty(Model.ImagenUrl))
+    {
+        <img src="@Model.ImagenUrl" alt="@Model.Nombre" class="img-fluid rounded product-image-preview" />
+          }
+         else
+                {
+           <div class="no-image-preview">
+   <i class="bi bi-image fs-1"></i>
+          </div>
+            }
+      </div>
+           <div class="col-md-8">
+                 <div class="p-4 rounded bg-dark">
+               <dl class="row mb-0">
+        <dt class="col-sm-4 text-muted">Nombre:</dt>
+         <dd class="col-sm-8 text-light fw-bold">@Model.Nombre</dd>
+           
+  <dt class="col-sm-4 text-muted">Categoría:</dt>
+        <dd class="col-sm-8 text-light">@Model.Categoria?.Nombre</dd>
     
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="ProductoId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+ <dt class="col-sm-4 text-muted">Precio:</dt>
+         <dd class="col-sm-8 text-success fw-bold">@Model.Precio.ToString("₡#,##0.00")</dd>
+             
+                <dt class="col-sm-4 text-muted">Stock:</dt>
+           <dd class="col-sm-8 text-light">@Model.Stock unidades</dd>
+        
+   @if (!string.IsNullOrEmpty(Model.Talla))
+     {
+          <dt class="col-sm-4 text-muted">Talla:</dt>
+        <dd class="col-sm-8 text-light">@Model.Talla</dd>
+       }
+            
+          @if (!string.IsNullOrEmpty(Model.Color))
+          {
+      <dt class="col-sm-4 text-muted">Color:</dt>
+      <dd class="col-sm-8 text-light">@Model.Color</dd>
+          }
+
+               @if (tieneVentas)
+   {
+   <dt class="col-sm-4 text-muted">Ventas:</dt>
+  <dd class="col-sm-8 text-light">
+                @cantidadVentas venta(s) registrada(s)
+           <a asp-controller="Ventas" asp-action="Index" class="btn btn-sm btn-info ms-2">
+             <i class="bi bi-receipt"></i> Ver Ventas
+     </a>
+     </dd>
+      }
+            </dl>
+  </div>
+        </div>
+   </div>
+
+  <div class="d-flex gap-2 mt-4">
+  @if (!tieneVentas)
+        {
+           <form asp-action="Delete" method="post" class="flex-grow-1">
+         <input type="hidden" asp-for="ProductoId" />
+                <button type="submit" class="btn btn-danger w-100" onclick="return confirm('¿Está completamente seguro de eliminar este producto? Esta acción eliminará el producto y su imagen.');">
+       <i class="bi bi-trash"></i> Sí, Eliminar Producto
+     </button>
+      </form>
+            }
+                 <a asp-action="Index" class="btn btn-outline-secondary flex-grow-1">
+    <i class="bi bi-arrow-left"></i> Cancelar
+   </a>
+        </div>
+        </div>
+  </div>
+        </div>
+    </div>
 </div>
+
+@section Styles {
+    <style>
+   .aura-dark-card {
+          background-color: #2a2a3e;
+     border: 1px solid rgba(0, 188, 212, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+    .aura-dark-card .card-body {
+            color: #f1f1f1;
+        }
+
+        .product-image-preview {
+      max-height: 300px;
+            object-fit: cover;
+       border: 2px solid rgba(0, 188, 212, 0.3);
+        }
+
+        .no-image-preview {
+  width: 100%;
+            height: 300px;
+       display: flex;
+    align-items: center;
+        justify-content: center;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3e 100%);
+     color: #666;
+      border-radius: 8px;
+            border: 2px solid rgba(0, 188, 212, 0.3);
+        }
+    </style>
+}

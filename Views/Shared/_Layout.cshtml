@@ -12,6 +12,7 @@
     <!-- CSS propio -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/aura.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/busqueda.css" asp-append-version="true" />
 
     @await RenderSectionAsync("Styles", required: false)
 </head>
@@ -63,10 +64,28 @@
                                     <i class="bi bi-receipt"></i> Detalles de Venta
                                 </a>
                             </li>
-                            <!-- NUEVO: Reportes solo para ADMINISTRADOR -->
                             <li class="nav-item">
-                                <a class="nav-link text-light" asp-controller="Reportes" asp-action="Index">
-                                    <i class="bi bi-bar-chart-line"></i> Reportes
+                                <a class="nav-link text-light" asp-controller="Facturas" asp-action="Index">
+                                    <i class="bi bi-file-earmark-text"></i> Facturas
+                                </a>
+                            </li>
+                        }
+                        else if (User.Identity?.IsAuthenticated == true && User.IsInRole("CAJERO"))
+                        {
+                            <!-- Menú para CAJERO - Solo Ventas, Detalles y Facturas -->
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Ventas" asp-action="Index">
+                                    <i class="bi bi-cart-check"></i> Ventas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="DetallesVentums" asp-action="Index">
+                                    <i class="bi bi-receipt"></i> Detalles de Venta
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Facturas" asp-action="Index">
+                                    <i class="bi bi-file-earmark-text"></i> Facturas
                                 </a>
                             </li>
                         }
@@ -93,6 +112,24 @@
                             </li>
                         }
                     </ul>
+
+                    <!-- Barra de búsqueda -->
+                    <form asp-controller="Busqueda" asp-action="Index" method="get" class="d-flex me-3" id="searchForm">
+                        <div class="search-container">
+                            <input type="text" 
+                                   name="q" 
+                                   id="searchInput"
+                                   class="form-control search-input" 
+                                   placeholder="Buscar productos o categorías..." 
+                                   autocomplete="off"
+                                   required />
+                            <div id="searchSuggestions" class="search-suggestions"></div>
+                        </div>
+                        <button type="submit" class="btn btn-aura ms-2">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -113,6 +150,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/busqueda.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

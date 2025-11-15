@@ -1,0 +1,223 @@
+@model Tuple<List<Tienda.Models.Producto>, List<Tienda.Models.Categoria>>
+
+@{
+    ViewData["Title"] = $"Resultados de búsqueda: {ViewBag.Query}";
+var productos = Model.Item1;
+    var categorias = Model.Item2;
+}
+
+<div class="container my-5">
+ <!-- Header de búsqueda -->
+    <div class="row mb-4">
+  <div class="col-md-12">
+    <h2 class="text-light">
+    <i class="bi bi-search"></i> Resultados para: <span class="text-aura">"@ViewBag.Query"</span>
+    </h2>
+       <p class="text-muted">
+        Se encontraron <strong>@ViewBag.TotalResultados</strong> resultados
+       (@ViewBag.TotalCategorias categorías, @ViewBag.TotalProductos productos)
+    </p>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+   <div class="btn-group">
+  <a asp-action="Index" asp-route-q="@ViewBag.Query" asp-route-filtro="todos" 
+           class="btn @(ViewBag.Filtro == "todos" ? "btn-aura" : "btn-outline-aura")">
+         <i class="bi bi-grid-3x3"></i> Todos
+   </a>
+    <a asp-action="Index" asp-route-q="@ViewBag.Query" asp-route-filtro="categorias" 
+     class="btn @(ViewBag.Filtro == "categorias" ? "btn-aura" : "btn-outline-aura")">
+      <i class="bi bi-tags"></i> Categorías (@ViewBag.TotalCategorias)
+      </a>
+     <a asp-action="Index" asp-route-q="@ViewBag.Query" asp-route-filtro="productos" 
+    class="btn @(ViewBag.Filtro == "productos" ? "btn-aura" : "btn-outline-aura")">
+            <i class="bi bi-box-seam"></i> Productos (@ViewBag.TotalProductos)
+      </a>
+   </div>
+   </div>
+    </div>
+
+    @if (ViewBag.TotalResultados == 0)
+    {
+        <div class="alert alert-dark text-center">
+  <i class="bi bi-inbox fs-1"></i>
+   <h4 class="mt-3">No se encontraron resultados</h4>
+   <p class="mb-0">Intenta con otras palabras clave o revisa la ortografía</p>
+        </div>
+    }
+    else
+    {
+   <!-- Categorías Encontradas -->
+     @if (categorias.Any() && (ViewBag.Filtro == "todos" || ViewBag.Filtro == "categorias"))
+ {
+            <section class="mb-5">
+          <h4 class="text-light mb-3">
+       <i class="bi bi-tags-fill"></i> Categorías (@categorias.Count)
+    </h4>
+       <div class="row g-3">
+           @foreach (var categoria in categorias)
+        {
+       <div class="col-md-4">
+ <div class="card categoria-result-card">
+      <div class="card-body">
+            <h5 class="card-title text-aura">
+<i class="bi bi-tag-fill"></i> @categoria.Nombre
+        </h5>
+   <p class="text-muted mb-3">
+   @categoria.Productos.Count producto(s) en esta categoría
+         </p>
+    <a asp-controller="Categorias" asp-action="VerCategoria" asp-route-id="@categoria.CategoriaId" class="btn btn-outline-aura btn-sm">
+Ver Productos
+</a>
+               </div>
+       </div>
+        </div>
+     }
+             </div>
+     </section>
+        }
+
+     <!-- Productos Encontrados -->
+        @if (productos.Any() && (ViewBag.Filtro == "todos" || ViewBag.Filtro == "productos"))
+{
+      <section class="mb-5">
+   <h4 class="text-light mb-3">
+       <i class="bi bi-box-seam-fill"></i> Productos (@productos.Count)
+      </h4>
+   <div class="row g-4">
+        @foreach (var producto in productos)
+ {
+           <div class="col-md-6 col-lg-3">
+       <div class="card product-result-card">
+   <div class="product-image-container">
+     @if (!string.IsNullOrEmpty(producto.ImagenUrl))
+          {
+ <img src="@producto.ImagenUrl" alt="@producto.Nombre" class="product-image" />
+      }
+     else
+       {
+     <div class="no-image-placeholder">
+    <i class="bi bi-image fs-1"></i>
+       </div>
+ }
+        </div>
+<div class="card-body">
+       <span class="badge bg-secondary mb-2">@producto.Categoria?.Nombre</span>
+            <h6 class="card-title">@producto.Nombre</h6>
+ <p class="text-muted small mb-2">
+       @if (!string.IsNullOrEmpty(producto.Color))
+   {
+  <span><i class="bi bi-palette"></i> @producto.Color</span>
+      }
+       @if (!string.IsNullOrEmpty(producto.Talla))
+   {
+         <span class="ms-2"><i class="bi bi-rulers"></i> @producto.Talla</span>
+       }
+     </p>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+  <span class="text-aura fw-bold fs-5">@producto.Precio.ToString("?#,##0.00")</span>
+@if (producto.Stock > 0)
+        {
+         <span class="badge bg-success">Stock: @producto.Stock</span>
+       }
+   else
+      {
+      <span class="badge bg-danger">Agotado</span>
+        }
+         </div>
+<a asp-controller="Productoes" asp-action="Details" asp-route-id="@producto.ProductoId" 
+      class="btn btn-outline-aura btn-sm w-100">
+   <i class="bi bi-eye"></i> Ver Detalles
+          </a>
+     </div>
+     </div>
+       </div>
+ }
+     </div>
+   </section>
+      }
+    }
+</div>
+
+@section Styles {
+    <style>
+ .text-aura {
+color: #00bcd4;
+        }
+
+        .btn-aura {
+       background-color: #00bcd4;
+    color: #121212;
+   border: none;
+        font-weight: 600;
+        }
+
+ .btn-aura:hover {
+        background-color: #00acc1;
+   color: #fff;
+ }
+
+     .btn-outline-aura {
+   border: 1px solid #00bcd4;
+  color: #00bcd4;
+ }
+
+        .btn-outline-aura:hover {
+            background-color: #00bcd4;
+     color: #121212;
+  }
+
+ .categoria-result-card {
+   background-color: #2a2a3e;
+      border: 1px solid rgba(0, 188, 212, 0.3);
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+     .categoria-result-card:hover {
+      transform: translateY(-5px);
+     box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4);
+      }
+
+        .product-result-card {
+     background-color: #2a2a3e;
+border-radius: 12px;
+      overflow: hidden;
+         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+ .product-result-card:hover {
+ transform: translateY(-5px);
+   box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4);
+        }
+
+   .product-image-container {
+ width: 100%;
+      height: 200px;
+background-color: #1e1e2f;
+   overflow: hidden;
+      display: flex;
+    align-items: center;
+     justify-content: center;
+ }
+
+        .product-image {
+width: 100%;
+      height: 100%;
+       object-fit: cover;
+        }
+
+        .no-image-placeholder {
+  width: 100%;
+  height: 100%;
+       display: flex;
+    align-items: center;
+     justify-content: center;
+            background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3e 100%);
+  color: #666;
+ }
+    </style>
+}
