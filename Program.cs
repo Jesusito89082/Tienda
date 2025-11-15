@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Tienda.Data;
 using Tienda.Services;
+using System.Text;
 using System.Globalization;
-using Tienda.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
